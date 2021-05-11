@@ -3,6 +3,8 @@ import { useHistory } from 'react-router-dom';
 import { Wrapper } from './LogIn.styles';
 import { UserContext } from '../../Context/authProvider';
 
+import GoogleLogin from 'react-google-login';
+
 const LoggIn = () => {
     const [userEmail, setUserEmail] = useState('');
     const [userPassword, setUserPassword] = useState('');
@@ -20,7 +22,20 @@ const LoggIn = () => {
             }
         });
         history.push('/dashboard');
-    }
+    };
+
+    const responseGoogle = (response) => {
+        console.log(response.googleId);
+        logInUser({
+            user: {
+                userEmail: response.googleId,
+                userPassword: null,
+            }
+        });
+        history.push('/dashboard');
+    };
+
+
     return(
         <Wrapper>
             <h1>Logg In</h1>
@@ -33,6 +48,14 @@ const LoggIn = () => {
                 value={userPassword} />
                 <button type="submit">Logg In</button>
             </form>
+            <p>or</p>
+            <GoogleLogin 
+                clientId="420218048324-i18dme6ipl1mj6jbjcra2ft4v83v26d4.apps.googleusercontent.com"
+                buttonText="Login"
+                onSuccess={responseGoogle}
+                onFailure={responseGoogle}
+                cookiePolicy={'single_host_origin'}
+            />
         </Wrapper>
     );
 };

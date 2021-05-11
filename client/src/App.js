@@ -4,17 +4,18 @@ import { theme } from './styles/Theme';
 import { ThemeProvider } from 'styled-components';
 
 import { routes } from './Router/Routes';
+import AuthProvider from './Context/authProvider';
 
 const App = () => {
   return (
-    <div className="App">
       <BrowserRouter>
+        <AuthProvider>
           <ThemeProvider theme={theme}>
             <Route exact path="/" component={routes.loggin} />
             <Route path="/dashboard" component={routes.dashboard} />
           </ThemeProvider>
+        </AuthProvider>
       </BrowserRouter>
-    </div>
   );
 }
 

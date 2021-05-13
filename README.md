@@ -4,5 +4,6 @@ and makes them available to recruiters in the form of subscription.
 
 ###How to start application
 1. Navigate to app home folder
-1. ```pip install -r requirements.txt```
+1. ```pip install -r backend/requirements.txt```
+1. ```export FLASK_APP=backend/gh_robber.py```
 1. ```flask run```

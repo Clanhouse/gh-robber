@@ -1,1 +1,4 @@
 Flask == 1.1.2
+Flask-SQLAlchemy==2.5.1
+Flask-Migrate==3.0.1
+ForgeryPy==0.1

@@ -7,7 +7,7 @@ from . import db
 from .models import User, GithubUser
 
 
-def create_fake_data(count=10):
+def create_fake_data(count):
     seed()
     for i in range(count):
         fake_user = User(email=forgery_py.internet.email_address(), active=True,)

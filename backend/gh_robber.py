@@ -1,5 +1,6 @@
 import os
 
+import click
 from flask_migrate import Migrate, upgrade
 
 from .app.models_helpers import create_fake_data
@@ -23,9 +24,12 @@ def deploy_cli():
 
 
 @app.cli.command("create_fake_data")
-def create_fake_data_cli():
+@click.option(
+    "--count", default=10, help="Number of fake data to create for each table."
+)
+def create_fake_data_cli(count):
     """Create fake data for all models."""
-    create_fake_data()
+    create_fake_data(count)
 
 
 if __name__ == "__main__":

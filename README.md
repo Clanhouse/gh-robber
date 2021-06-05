@@ -16,3 +16,7 @@ and makes them available to recruiters in the form of subscription.
 ### How to create fake data
 1. Navigate to backend/app folder
 1. ```flask create_fake_data```
+
+There is also possibility to define desired number of fake data to be created for each table
+(default is 10).
+To do that, add ```--count NUMBER_OF_FAKE_DATA``` to upper command.

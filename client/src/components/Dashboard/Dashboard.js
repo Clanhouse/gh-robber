@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { Redirect } from 'react-router-dom';
 import { UserContext } from '../../Context/authProvider';
 
 
@@ -9,24 +10,17 @@ const Dashboard = () => {
     console.log(context.user);
 
     const printContent = () => {
-        if(context.user) {
             return(
                 <>
                     <h1>Success!</h1>
                     <p>your email: {context.user.userEmail}</p>
                 </>
             );
-        }
-        if(context.user === null) {
-            return(
-                <h1>Youmare not logged in :(</h1>
-            );
-        }
     };
 
     return(
         <div>
-            {printContent()}
+            {context.user ? printContent() : <Redirect to='/' />}
         </div>
     );
 };

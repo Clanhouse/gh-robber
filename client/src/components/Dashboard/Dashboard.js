@@ -4,6 +4,7 @@ import { UserContext } from '../../Context/authProvider';
 
 import { Container } from './Dashboard.styles';
 import Menu from '../Menu/Menu';
+import RepoList from '../RepoList/RepoList';
 
 
 const Dashboard = () => {
@@ -16,8 +17,7 @@ const Dashboard = () => {
             return(
                 <Container>
                     <Menu />
-                    <h1>Success!</h1>
-                    <p>your email: {context.user.userEmail}</p>
+                    <RepoList />
                 </Container>
             );
     };

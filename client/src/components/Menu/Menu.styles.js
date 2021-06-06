@@ -1,13 +1,11 @@
 import styled from 'styled-components';
 
 export const MenuWrapper = styled.nav`
+    background-color: ${({ theme }) => theme.colors.white};
     color: ${({ theme }) => theme.colors.orange};
-    width: 100%;
+    width: 15%;
     height: 100%;
-`;
 
-export const LoginWindow = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    ${({ theme }) => theme.flex.column_start_center};
+
 `;

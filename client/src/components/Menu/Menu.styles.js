@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const Wrapper = styled.div`
+export const MenuWrapper = styled.nav`
     color: ${({ theme }) => theme.colors.orange};
     width: 100%;
     height: 100%;

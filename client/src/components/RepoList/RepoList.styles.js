@@ -12,4 +12,7 @@ export const RepoListView = styled.ul`
     background-color: ${({ theme }) => theme.colors.white};
     width: 50%;
     height: 50%;
+    padding: 0;
+
+    overflow: scroll;
 `;

@@ -1,13 +1,15 @@
 import React, { useContext } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Route, useRouteMatch } from 'react-router-dom';
 import { UserContext } from '../../Context/authProvider';
 
 import { Container } from './Dashboard.styles';
 import Menu from '../Menu/Menu';
-import RepoList from '../RepoList/RepoList';
+import { dashboardRoutes } from '../../Router/Routes';
 
 
 const Dashboard = () => {
+
+    const { path } = useRouteMatch();
 
     const { context } = useContext(UserContext);
 
@@ -17,7 +19,8 @@ const Dashboard = () => {
             return(
                 <Container>
                     <Menu />
-                    <RepoList />
+                    <Route exact path={`${path}`} component={dashboardRoutes.repolist} />
+                    <Route path={`${path}/search`} component={dashboardRoutes.search} />                    
                 </Container>
             );
     };

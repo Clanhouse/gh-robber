@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { UserContext } from '../../Context/authProvider';
 
 import { GoogleLogout } from 'react-google-login';
@@ -16,7 +16,7 @@ const Menu = () => {
 
     return(
         <MenuWrapper>
-            menu
+            <Link to='dashboard/search'>Search</Link>
             <GoogleLogout
                 clientId="420218048324-i18dme6ipl1mj6jbjcra2ft4v83v26d4.apps.googleusercontent.com"
                 buttonText="Logout"

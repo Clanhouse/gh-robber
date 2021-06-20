@@ -13,7 +13,12 @@ const SearchByRepoView = ({ saveInput }) => {
             <Dropdown label='technology' 
                       optionsArray={technologiesArr}
                       passInput={data => saveInput(data)}/>
-            <RangeInput label='Stars count'
+            <RangeInput label='Min stars count'
+                        passInput={data => saveInput(data)}
+                        minValue={1}
+                        maxValue={100}
+                        valueStep={10} />
+            <RangeInput label='Max stars count'
                         passInput={data => saveInput(data)}
                         minValue={1}
                         maxValue={100}

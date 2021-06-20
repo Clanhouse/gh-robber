@@ -6,7 +6,12 @@ const SearchByUserView = ({ saveInput }) => {
     return(
         <div>
             <TextInput label='Github nick' passInput={data => saveInput(data)}/>
-            <RangeInput label='Repository count'
+            <RangeInput label='Min repository count'
+                        passInput={data => saveInput(data)}
+                        minValue={1}
+                        maxValue={100}
+                        valueStep={10} />
+            <RangeInput label='Max repository count'
                         passInput={data => saveInput(data)}
                         minValue={1}
                         maxValue={100}

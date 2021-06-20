@@ -4,7 +4,7 @@ import Dropdown from '../Dropdown/Dropdown';
 import RangeInput from '../RangeInput/RangeInput';
 
 const SearchByRepoView = ({ saveInput }) => {
-
+    //list of technologies avalible to search
     const technologiesArr = ['JavaScript', 'Python', 'C#', 'COBOL'];
 
     return(

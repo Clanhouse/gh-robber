@@ -5,7 +5,7 @@ const Dropdown = ({ label, optionsArray, passInput }) => {
     const optionsGenerator = (options) => {
         return options.map( option => <option   key={option}
                                                 value={option}>
-                                                >{option}</option>);
+                                                {option}</option>);
     };
 
     return(

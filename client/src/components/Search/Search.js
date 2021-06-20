@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
+import axios from 'axios';
 import { SearchWrapper } from './Search.styles';
+
+import { URL_USERS_REQUEST } from '../../URLs/URLs';
 
 import SearchByRepoView from './SearchByRepoView/SearchByRepoView';
 import SearchByUserView from './SearchByUserView/SearchByUserView';
@@ -67,6 +70,9 @@ const Search = () => {
                 repositoriesCountMin: searchMinRepoCount,
                 repositoriesCountMax: searchMaxRepoCount
             }
+            axios.post(URL_USERS_REQUEST, requestObject)
+            .then(res => console.log(res))
+            .catch(e => console.log(e));
         } else if (searchType === 'repository') {
             requestObject = {
                 name: searchRepoName,
@@ -74,9 +80,9 @@ const Search = () => {
                 starsMin: searchMinStarsCount,
                 starsMax: searchMaxStarsCount
             }
+            console.log('send request', requestObject);
         }
 
-        console.log('send request', requestObject);
     };
 
     return(

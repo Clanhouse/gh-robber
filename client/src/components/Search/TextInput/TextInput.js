@@ -1,8 +1,14 @@
 import React from 'react';
 
-const TextInput = () => {
+const TextInput = ({ label, passInput }) => {
     return(
-        <div>TextInput</div>
+        <>
+            <label htmlFor={label}>{label}</label>
+            <input  id={label} 
+                    type='text' 
+                    placeholder={label}
+                    onChange={event => passInput(event)}></input>
+        </>
     );
 };
 

@@ -14,16 +14,20 @@ const Search = () => {
         } else {
             setSearchType('user')
         }
+    };
+
+    const saveInputHandler = (event) => {
+        console.log('saveInputHandler', event.target.value, event.target.id)
     }
 
     const printContent = (typeOfSearch) => {
         switch(typeOfSearch) {
             case 'user': 
-            return <SearchByUserView />
+            return <SearchByUserView saveInput={(data) => saveInputHandler(data)}/>
             case 'repository':
-            return <SearchByRepoView />
+            return <SearchByRepoView saveInput={(data) => saveInputHandler(data)}/>
             default: 
-            return <SearchByUserView />
+            return <SearchByUserView saveInput={(data) => saveInputHandler(data)}/>
         }
     }
 

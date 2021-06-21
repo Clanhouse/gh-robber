@@ -9,14 +9,13 @@ const LoggIn = () => {
     const { logInUser, context } = useContext(UserContext);
 
     let history = useHistory();
-    console.log(context.user);
 
     const responseGoogle = (response) => {
-        console.log(response.googleId);
         logInUser({
             user: {
-                userEmail: response.googleId,
-                userPassword: null,
+                userEmail: response.profileObj.email,
+                userID: response.googleId,
+                userName: response.profileObj.name
             }
         });
         history.push('/dashboard');

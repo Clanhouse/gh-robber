@@ -13,7 +13,7 @@ const Dashboard = () => {
 
     const { context } = useContext(UserContext);
 
-    console.log(context.user);
+    console.log('logged user', context.user);
 
     const printContent = () => {
             return(

@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
-import axios from 'axios';
+import React, { useState } from 'react';
 import { SearchWrapper } from './Search.styles';
 
-import { URL_USERS_REQUEST } from '../../URLs/URLs';
+import { URL_USERS_REQUEST_githubUsers } from '../../URLs/URLs';
 
 import SearchByRepoView from './SearchByRepoView/SearchByRepoView';
 import SearchByUserView from './SearchByUserView/SearchByUserView';
@@ -69,9 +68,22 @@ const Search = () => {
                 username: searchGithubNick,
                 repositoriesCountMin: searchMinRepoCount,
                 repositoriesCountMax: searchMaxRepoCount
-            }
-            axios.post(URL_USERS_REQUEST, requestObject)
-            .then(res => console.log(res))
+            };
+            //temporary we need to use fetch instead of axios because of cors policy
+            fetch(URL_USERS_REQUEST_githubUsers, {
+                method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                mode: 'no-cors', // no-cors, *cors, same-origin
+                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                credentials: 'same-origin', // include, *same-origin, omit
+                headers: {
+                  'Content-Type': 'application/json'
+                  // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                redirect: 'follow', // manual, *follow, error
+                referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                body: JSON.stringify(requestObject) // body data type must match "Content-Type" header
+              })
+            .then(res => console.log('responseeee', res))
             .catch(e => console.log(e));
         } else if (searchType === 'repository') {
             requestObject = {

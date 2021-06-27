@@ -1,8 +1,8 @@
 import React from 'react';
 
-const SubmitButton = ({ label, taskFuntion }) => {
+const SubmitButton = ({ label, taskFunction }) => {
     return(
-        <button onClick={() => taskFuntion()}>{label}</button>
+        <button onClick={() => taskFunction()}>{label}</button>
     );
 };
 

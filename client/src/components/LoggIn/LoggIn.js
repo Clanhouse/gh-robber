@@ -11,11 +11,13 @@ const LoggIn = () => {
     let history = useHistory();
 
     const responseGoogle = (response) => {
+        console.log('login response', response)
         logInUser({
             user: {
                 userEmail: response.profileObj.email,
                 userID: response.googleId,
-                userName: response.profileObj.name
+                userName: response.profileObj.name,
+                accessToken: response.accessToken
             }
         });
         history.push('/dashboard');

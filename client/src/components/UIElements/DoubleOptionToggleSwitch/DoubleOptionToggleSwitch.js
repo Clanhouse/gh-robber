@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 
-const DoubleOptionToggleSwitch = ({ labelFirst, labelSecond, taskFunktion }) => {
+const DoubleOptionToggleSwitch = ({ labelFirst, labelSecond, taskFunction }) => {
     //true is option 1, false option 2
     const [switchState, setSwitchState] = useState(true);
     const toggleHandler = () => {
         setSwitchState(!switchState);
-        taskFunktion();
+        taskFunction();
     };
     return(
         <div onClick={() => toggleHandler()}>

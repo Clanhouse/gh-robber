@@ -103,7 +103,7 @@ const Search = () => {
             <DoubleOptionToggleSwitch 
                 labelFirst='Click to search by repo'
                 labelSecond='Click to search by user'
-                taskFunktion={() => toggleSearchType()} 
+                taskFunction={() => toggleSearchType()} 
             />
             {printContent(searchType)}
             <SubmitButton label='Search' taskFuntion={() => sendSearchRequest()}/>

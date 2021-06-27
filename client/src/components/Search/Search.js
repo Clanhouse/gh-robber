@@ -106,7 +106,7 @@ const Search = () => {
                 taskFunction={() => toggleSearchType()} 
             />
             {printContent(searchType)}
-            <SubmitButton label='Search' taskFuntion={() => sendSearchRequest()}/>
+            <SubmitButton label='Search' taskFunction={() => sendSearchRequest()}/>
         </SearchWrapper>
     );
 };

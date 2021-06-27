@@ -29,7 +29,6 @@ const Search = () => {
 
     const saveInputHandler = (event) => {
         const targetVal = event.target.value;
-        console.log('saveInputHandler', targetVal, event.target.id);
         switch(event.target.id) {
             case 'Github nick':
                 return setSearchGithubNick(targetVal);
@@ -83,7 +82,7 @@ const Search = () => {
                 referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
                 body: JSON.stringify(requestObject) // body data type must match "Content-Type" header
               })
-            .then(res => console.log('responseeee', res))
+            .then(res => console.log('response', res))
             .catch(e => console.log(e));
         } else if (searchType === 'repository') {
             requestObject = {
@@ -92,7 +91,6 @@ const Search = () => {
                 starsMin: searchMinStarsCount,
                 starsMax: searchMaxStarsCount
             }
-            console.log('send request', requestObject);
         }
 
     };

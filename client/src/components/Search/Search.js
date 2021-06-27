@@ -8,6 +8,8 @@ import SearchByUserView from './SearchByUserView/SearchByUserView';
 import SubmitButton from '../UIElements/SubmitButton/SubmitButton';
 import DoubleOptionToggleSwitch from '../UIElements/DoubleOptionToggleSwitch/DoubleOptionToggleSwitch';
 
+import { LangSearch, LangSearchByRepoView, LangSearchByUserView } from '../../i18n/ENG';
+
 const Search = () => {
     //we can search by user or by repo
     const [searchType, setSearchType] = useState('user');
@@ -18,6 +20,10 @@ const Search = () => {
     const [searchTech, setSearchTech] = useState(null);
     const [searchMinStarsCount, setSearchMinStarsCount] = useState(null);
     const [searchMaxStarsCount, setSearchMaxStarsCount] = useState(null);
+
+    const { searchBy, toggleSwitchLabelFirst, toggleSwitchLabelSecond, submitButton } = LangSearch;
+    const { repositoryName, technology, minStarsCount, maxStarsCount } = LangSearchByRepoView;
+    const { githubNick, minRepoCount, maxRepoCount } = LangSearchByUserView;
 
     const toggleSearchType = () => {
         if(searchType === 'user') {
@@ -30,19 +36,19 @@ const Search = () => {
     const saveInputHandler = (event) => {
         const targetVal = event.target.value;
         switch(event.target.id) {
-            case 'Github nick':
+            case githubNick:
                 return setSearchGithubNick(targetVal);
-            case 'Min repository count':
+            case minRepoCount:
                 return setSearchMinRepoCount(targetVal);
-            case 'Max repository count':
+            case maxRepoCount:
                 return setSearchMaxRepoCount(targetVal);
-            case 'Repository name': 
+            case repositoryName: 
                 return setSearchRepoName(targetVal);
-            case 'technology':
+            case technology:
                 return setSearchTech(targetVal);
-            case 'Min stars count':
+            case minStarsCount:
                 return setSearchMinStarsCount(targetVal);
-            case 'Max stars count':
+            case maxStarsCount:
                 return setSearchMaxStarsCount(targetVal);
             default:
                 return null;
@@ -97,14 +103,14 @@ const Search = () => {
 
     return(
         <SearchWrapper>
-            <p>Search by {searchType}</p>
+            <p>{searchBy}{searchType}</p>
             <DoubleOptionToggleSwitch 
-                labelFirst='Click to search by repo'
-                labelSecond='Click to search by user'
+                labelFirst={toggleSwitchLabelFirst}
+                labelSecond={toggleSwitchLabelSecond}
                 taskFunction={() => toggleSearchType()} 
             />
             {printContent(searchType)}
-            <SubmitButton label='Search' taskFunction={() => sendSearchRequest()}/>
+            <SubmitButton label={submitButton} taskFunction={() => sendSearchRequest()}/>
         </SearchWrapper>
     );
 };

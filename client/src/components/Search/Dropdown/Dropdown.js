@@ -1,6 +1,10 @@
 import React from 'react';
 
+import { LangDropdown } from '../../../i18n/ENG';
+
 const Dropdown = ({ label, optionsArray, passInput }) => {
+
+    const { mainLabel } = LangDropdown;
 
     const optionsGenerator = (options) => {
         return options.map( option => <option   key={option}
@@ -10,7 +14,7 @@ const Dropdown = ({ label, optionsArray, passInput }) => {
 
     return(
         <>
-            <label htmlFor={label}>Choose a {label}:</label>
+            <label htmlFor={label}>{mainLabel}{label}:</label>
             <select name={label} 
                     id={label} 
                     form={label}

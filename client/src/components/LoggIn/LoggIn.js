@@ -5,10 +5,14 @@ import { UserContext } from '../../Context/authProvider';
 
 import GoogleLogin from 'react-google-login';
 
+import { LangLoggIn } from '../../i18n/ENG';
+
 const LoggIn = () => {
     const { logInUser, context } = useContext(UserContext);
 
     let history = useHistory();
+
+    const { mainLabel, secondLabel, googleButtonLabel } = LangLoggIn;
 
     const responseGoogle = (response) => {
         logInUser({
@@ -26,11 +30,11 @@ const LoggIn = () => {
     return(
         <Wrapper>
             <LoginWindow>
-                <h1>Welcome to Github Robber!</h1>
-                <p>Please, log in using Your google Account</p>
+                <h1>{mainLabel}</h1>
+                <p>{secondLabel}</p>
                 <GoogleLogin 
                     clientId="420218048324-i18dme6ipl1mj6jbjcra2ft4v83v26d4.apps.googleusercontent.com"
-                    buttonText="Login"
+                    buttonText={googleButtonLabel}
                     onSuccess={responseGoogle}
                     onFailure={responseGoogle}
                     cookiePolicy={'single_host_origin'}

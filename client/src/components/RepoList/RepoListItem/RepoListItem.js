@@ -1,11 +1,15 @@
 import React from 'react';
 import { RepoListItemWrapper, RepoListItemItems } from './RepoListItem.styles';
 
+import { LangRepoListItem } from '../../../i18n/ENG';
+
 const RepoListItem = ({ username, repositories_count }) => {
+    const { label1, label2 } = LangRepoListItem;
+    
     return(
         <RepoListItemWrapper>
-            <RepoListItemItems>Github nick: {username}</RepoListItemItems>
-            <RepoListItemItems>Number of repositories: {repositories_count}</RepoListItemItems>
+            <RepoListItemItems>{label1}{username}</RepoListItemItems>
+            <RepoListItemItems>{label2}{repositories_count}</RepoListItemItems>
         </RepoListItemWrapper>
     );
 };

@@ -13,6 +13,8 @@ const Dashboard = () => {
 
     const { context } = useContext(UserContext);
 
+    console.log(context.user);
+
     const printContent = () => {
             return(
                 <Container>

@@ -21,6 +21,7 @@ const RepoList = () => {
                                             key={el.username}
                                             username={el.username} 
                                             repositories_count={el.repositories_count}
+                                            githubUser={el}
                                           />);
     }
 

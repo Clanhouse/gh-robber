@@ -7,6 +7,7 @@ export const LangLoggIn = {
 
 export const LangMenu = {
     link1: "Search",
+    link2: "Favorite List"
 };
 
 export const LangRepoListItem = {

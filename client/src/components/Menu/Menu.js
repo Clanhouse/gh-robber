@@ -16,7 +16,7 @@ const Menu = () => {
         history.push('/');
     };
 
-    const { link1 } = LangMenu;
+    const { link1, link2 } = LangMenu;
 
     return(
         <MenuWrapper>
@@ -26,6 +26,7 @@ const Menu = () => {
                 buttonText="Logout"
                 onLogoutSuccess={logOut}
             />
+            <Link to='dashboard/favorites'>{link2}</Link>
         </MenuWrapper>
     );
 };

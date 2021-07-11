@@ -18,7 +18,8 @@ const Dashboard = () => {
                 <Container>
                     <Menu />
                     <Route exact path={`${path}`} component={dashboardRoutes.repolist} />
-                    <Route path={`${path}/search`} component={dashboardRoutes.search} />                    
+                    <Route path={`${path}/search`} component={dashboardRoutes.search} />     
+                    <Route exact path={`${path}/favorites`} component={dashboardRoutes.favorites} />               
                 </Container>
             );
     };

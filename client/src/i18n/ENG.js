@@ -7,7 +7,8 @@ export const LangLoggIn = {
 
 export const LangMenu = {
     link1: "Search",
-    link2: "Favorite List"
+    link2: "Favorite List",
+    timer: "Time to logout"
 };
 
 export const LangRepoListItem = {

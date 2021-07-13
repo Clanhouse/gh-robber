@@ -20,3 +20,21 @@ and makes them available to recruiters in the form of subscription.
 There is also possibility to define desired number of fake data to be created for each table
 (default is 10).
 To do that, add ```--count NUMBER_OF_FAKE_DATA``` to upper command.
+
+## Start client side app
+
+Download files and instal dependencies :
+
+npm install
+or
+yarn install
+
+Then, run the development server:
+
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

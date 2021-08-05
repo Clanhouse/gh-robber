@@ -1,8 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from ..config import config
-from .db_manage_commands import db_manage_commands, 
-
+from .db_manage_commands import db_manage_commands
 
 db = SQLAlchemy()
 

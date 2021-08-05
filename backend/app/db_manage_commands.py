@@ -1,8 +1,9 @@
 from pathlib import Path
 import json
 
-from backend.app import db, app
-from backend.app import GithubUserInfo
+from . import db, app
+from .models import User, GithubUser, GithubUserInfo
+from .models_helpers import create_fake_info
 
 
 @app.cli.group()
@@ -15,12 +16,7 @@ def db_manage():
 def add_data():
     """Add sample data to database"""
     try:
-        user_info = Path(__file__).parent / "data_sample" / "user_info.json"
-        with open(user_info) as file:
-            data_json = json.load(file)
-        for item in data_json:
-            user_info = GithubUserInfo(**item)
-            db.session.add(user_info)
+        create_fake_info()
         db.session.commit()
         print("Data has been successfully added to database")
     except Exception as exc:

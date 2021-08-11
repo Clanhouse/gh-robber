@@ -2,3 +2,4 @@ Flask == 2.0.1
 Flask-SQLAlchemy==2.5.1
 Flask-Migrate==3.0.1
 ForgeryPy==0.1
+marshmallow==3.13.0

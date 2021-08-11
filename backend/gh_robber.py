@@ -3,7 +3,7 @@ import os
 import click
 from flask_migrate import Migrate, upgrade
 
-from .app.models_helpers import create_fake_data, 
+from .app.models_helpers import create_fake_data, create_fake_info
 from .app.models import User, GithubUser, GithubUserInfo, GithubUserInfoSchema
 from .app import create_app
 from .app import db

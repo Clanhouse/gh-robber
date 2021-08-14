@@ -35,6 +35,20 @@ class GithubUserInfo(db.Model):
     def __repr__(self):
         return f"<{self.__class__.__name__}>: {self.username}"
 
+    def __init__(self, id, username, language, date, stars, number_of_repositories):
+        self.id = id
+        self.username = username
+        self.language = language
+        self.date = date
+        self.stars = stars
+        self.number_of_repositories = number_of_repositories
+
+
+    def create(self):
+        db.session.add(self)
+        db.session.commit()
+        return self
+
     @staticmethod
     def get_args(fields: str) -> dict:
         """
@@ -71,6 +85,11 @@ class GithubUserInfo(db.Model):
 
 
 class GithubUserInfoSchema(Schema):
+
+    class Meta:
+        model = GithubUserInfo
+        load_instance = True
+
     """Serialization to json format"""
     id = fields.Integer()
     username = fields.String()

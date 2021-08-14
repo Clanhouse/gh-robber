@@ -9,7 +9,7 @@ from .models import User, GithubUser, GithubUserInfo, GithubUserInfoSchema
 LANGUAGE_LIST = ["JavaScript", "Java", "Python", "PHP", "C++", "C#", "TypeScript", "R", "Swift", "Kotlin", "Rust", "Julia"]
 
 
-def create_fake_data(count):
+def create_fake_data(count=10):
     seed()
     for i in range(count):
         fake_user = User(email=forgery_py.internet.email_address(), active=True,)
@@ -31,9 +31,10 @@ def create_fake_info(count=10):
     seed()
     for _ in range(count):
         fake_info = GithubUserInfo(
-            username = forgery_py.internet.username(True),
+            id = None,
+            username = forgery_py.internet.user_name(True),
             language = choice(LANGUAGE_LIST),
-            date = forgery_py.date.day(),
+            date = forgery_py.date.date(),
             stars = randint(1, 100),
             number_of_repositories = randint(1, 10),
         )

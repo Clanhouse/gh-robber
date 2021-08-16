@@ -32,6 +32,7 @@ def users_info():
     query = GithubUserInfo.query
     schema_args = GithubUserInfo.get_args(request.args.get("fields"))
     query = GithubUserInfo.apply_order(query, request.args.get("sort"))
+    query = GithubUserInfo.apply_filter(query, request.args)
     users = query.all()
     user_schema = GithubUserInfoSchema(**schema_args)
 

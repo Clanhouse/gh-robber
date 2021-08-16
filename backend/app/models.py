@@ -1,7 +1,14 @@
+import re
 from . import db
 from marshmallow import Schema, fields
 from flask_sqlalchemy import BaseQuery
+from sqlalchemy.orm.attributes import InstrumentedAttribute
+from sqlalchemy.sql.expression import BinaryExpression
 from datetime import date, datetime
+from werkzeug.datastructures import ImmutableDict
+
+
+COMPARISION_OPERATOR_RE = re.compile(r"(.*)\[(gte|gt|lte|lt)\]")
 
 
 class User(db.Model):
@@ -29,8 +36,8 @@ class GithubUserInfo(db.Model):
     username = db.Column(db.String(50), nullable=False)
     language = db.Column(db.String(250), nullable=False)
     date = db.Column(db.Date(), nullable=False)
-    stars = db.Column(db.Float(10), nullable=False)
-    number_of_repositories = db.Column(db.Float(10), nullable=False)
+    stars = db.Column(db.Integer, nullable=False)
+    number_of_repositories = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
         return f"<{self.__class__.__name__}>: {self.username}"
@@ -42,7 +49,6 @@ class GithubUserInfo(db.Model):
         self.date = date
         self.stars = stars
         self.number_of_repositories = number_of_repositories
-
 
     def create(self):
         db.session.add(self)
@@ -83,6 +89,36 @@ class GithubUserInfo(db.Model):
                     query = query.order_by(column_attr.desc()) if desc() else query.order_by(column_attr)
         return query
 
+    @staticmethod
+    def get_filter_argument(column_name: InstrumentedAttribute, value: str, operator: str) -> BinaryExpression:
+        operator_mapping = {
+            "==":column_name == value,
+            "gte":column_name >= value,
+            "gt":column_name > value,
+            "lte":column_name <= value,
+            "lt":column_name < value
+        }
+        return operator_mapping[operator]
+
+    @staticmethod
+    def apply_filter(query: BaseQuery, params: ImmutableDict) -> BaseQuery:
+        for param, value in params.items():
+            if param not in {"fields", "sort"}:
+                operator = "=="
+                match = COMPARISION_OPERATOR_RE.match(param)
+                if match is not None:
+                    param, operator = match.groups()
+                column_attr = getattr(GithubUserInfo, param, None)
+                if column_attr is not None:
+                    if param == "date":
+                        try:
+                            value = datetime.strftime(value, "%d-%m-%Y").date()
+                        except ValueError:
+                            continue
+                    filter_argument = GithubUserInfo.get_filter_argument(column_attr, value, operator)
+                    query = query.filter(filter_argument)
+        return query
+
 
 class GithubUserInfoSchema(Schema):
 
@@ -95,8 +131,8 @@ class GithubUserInfoSchema(Schema):
     username = fields.String()
     language = fields.String()
     date = fields.Date("%d-%m-%Y")
-    stars = fields.Float()
-    number_of_repositories = fields.Float()
+    stars = fields.Integer()
+    number_of_repositories = fields.Integer()
 
 
 info_schema = GithubUserInfoSchema()

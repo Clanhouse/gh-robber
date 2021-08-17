@@ -1,7 +1,8 @@
 from pathlib import Path
 import json
 
-from . import db, app
+from . import app
+from .app import db, app
 from .app.models import User, GithubUser, GithubUserInfo, GithubUserInfoSchema
 from .app.models_helpers import create_fake_info
 

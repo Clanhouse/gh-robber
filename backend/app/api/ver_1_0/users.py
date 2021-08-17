@@ -1,3 +1,4 @@
+from .app import db
 from webargs.flaskparser import use_args
 from backend.app.api.ver_1_0 import users_api
 from backend.app.models import User, GithubUser, GithubUserInfo, GithubUserInfoSchema, info_schema
@@ -15,6 +16,7 @@ def get_github_users():
     github_users = [github_user.username for github_user in GithubUser.query.all()]
     return {"github_users": github_users}
 
+
 @users_api.route("/search/", methods=['GET'])
 def users_info():
     query = GithubUserInfo.query
@@ -29,6 +31,7 @@ def users_info():
         "data": user_schema.dump(users),
         "numbers_of_records": len(users)
     })
+
 
 # TODO needs validation - by marshmallow
 @users_api.route("/github-users-post/", methods=['POST'])
@@ -51,7 +54,8 @@ def create_author(args: dict):
     db.session.add(github_user)
     db.session.commit()
 
-    return jsonify({'data': info_schema.dump(github_user)}),  200
+    return jsonify({'data': info_schema.dump(github_user)}),  201
+
 
 @users_api.route('/users/<int:github_user_id>', methods=['PUT'])
 @use_args(info_schema)

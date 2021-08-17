@@ -1,6 +1,6 @@
 import re
 from . import db
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, validate, validates,  ValidationError
 from flask_sqlalchemy import BaseQuery
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.sql.expression import BinaryExpression
@@ -127,12 +127,17 @@ class GithubUserInfoSchema(Schema):
         load_instance = True
 
     """Serialization to json format"""
-    id = fields.Integer()
-    username = fields.String()
-    language = fields.String()
-    date = fields.Date("%d-%m-%Y")
-    stars = fields.Integer()
-    number_of_repositories = fields.Integer()
+    id = fields.Integer(dump_only=True)
+    username = fields.String(required=True, validate=validate.Length(max=50))
+    language = fields.String(required=True, validate=validate.Length(max=250))
+    date = fields.Date("%d-%m-%Y", required=True)
+    stars = fields.Integer(required=True)
+    number_of_repositories = fields.Integer(required=True)
+
+    @validates("date")
+    def validate_date(self, value):
+        if value > datetime.now().date():
+            raise ValidationError(f'Date must be earlier than {datetime.now().date()}')
 
 
 info_schema = GithubUserInfoSchema()

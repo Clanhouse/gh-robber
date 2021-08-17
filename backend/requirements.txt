@@ -7,3 +7,4 @@ Werkzeug~=2.0.1
 SQLAlchemy~=1.4.22
 alembic~=1.6.5
 click~=8.0.1
+webargs==8.0.1

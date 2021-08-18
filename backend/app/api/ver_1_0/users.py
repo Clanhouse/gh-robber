@@ -47,7 +47,7 @@ def new_user_info():
 
 
 @users_api.route('/users', methods=['POST'])
-@use_args(info_schema)
+@use_args(info_schema, error_status_code=400)
 def create_author(args: dict):
     github_user = GithubUserInfo(**args)
 
@@ -58,8 +58,9 @@ def create_author(args: dict):
 
 
 @users_api.route('/users/<int:github_user_id>', methods=['PUT'])
-@use_args(info_schema)
-def update_author(github_user_id: int):
+@validate_json_content_type
+@use_args(info_schema, error_status_code=400)
+def update_author(args: dict, github_user_id: int):
     github_user = GithubUserInfo.query.get_or_404(github_user_id, description=f'Github user with id {github_user_id} not found')
 
     github_user.username = args['username']
@@ -72,11 +73,12 @@ def update_author(github_user_id: int):
 
     return jsonify({'data': info_schema.dump(github_user)})
 
-# @users_api.route('/users/<int:user_id>', methods=['DELETE'])
-# def delete_user_info(github_user_id: int):
-#     github_user = GithubUserInfo.query.get_or_404(github_user_id, description=f'Github user with id {github_user_id} not found')
-#     db.session.delete(github_user)
-#
-#     db.session.commit()
-#
-#     return jsonify({'data': f'Github user with id {github_user_id} has been deleted'})
+
+@users_api.route('/users/<int:user_id>', methods=['DELETE'])
+def delete_user_info(github_user_id: int):
+    github_user = GithubUserInfo.query.get_or_404(github_user_id, description=f'Github user with id {github_user_id} not found')
+
+    db.session.delete(github_user)
+    db.session.commit()
+
+    return jsonify({'data': f'Github user with id {github_user_id} has been deleted'})

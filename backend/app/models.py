@@ -8,26 +8,8 @@ from datetime import date, datetime
 from werkzeug.datastructures import ImmutableDict
 
 
-COMPARISION_OPERATOR_RE = re.compile(r"(.*)\[(gte|gt|lte|lt)\]")
+COMPARISON_OPERATOR_RE = re.compile(r"(.*)\[(gte|gt|lte|lt)\]")
 
-
-class User(db.Model):
-    __tablename__ = "users"
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(256), unique=True)
-    active = db.Column(db.Boolean, default=False)
-
-    def __repr__(self):
-        return f"<User {self.email}>"
-
-
-class GithubUser(db.Model):
-    __tablename__ = "github_users"
-    username = db.Column(db.String(64), primary_key=True)
-    repositories_count = db.Column(db.Integer)
-
-    def __repr__(self):
-        return f"<Github user {self.username}>"
 
 
 class GithubUserInfo(db.Model):
@@ -105,7 +87,7 @@ class GithubUserInfo(db.Model):
         for param, value in params.items():
             if param not in {"fields", "sort"}:
                 operator = "=="
-                match = COMPARISION_OPERATOR_RE.match(param)
+                match = COMPARISON_OPERATOR_RE.match(param)
                 if match is not None:
                     param, operator = match.groups()
                 column_attr = getattr(GithubUserInfo, param, None)
@@ -120,7 +102,9 @@ class GithubUserInfo(db.Model):
         return query
 
 
+
 class GithubUserInfoSchema(Schema):
+
 
     class Meta:
         model = GithubUserInfo

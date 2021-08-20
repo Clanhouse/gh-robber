@@ -10,4 +10,5 @@ def validate_json_content_type(func):
         if data is None:
             raise UnsupportedMediaType("Content type must be application/json")
         return func(*args, **kwargs)
+
     return wrapper

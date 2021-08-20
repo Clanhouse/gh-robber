@@ -11,14 +11,17 @@ def get_users_info():
     query = GithubUserInfo.query
     schema_args = GithubUserInfo.get_args(request.args.get("fields"))
     query = GithubUserInfo.apply_order(query, request.args.get("sort"))
-    query = GithubUserInfo.apply_filter(query, request.args)
-    users = query.all()
-    user_schema = GithubUserInfoSchema(**schema_args)
+    query = GithubUserInfo.apply_filter(query)
+    items, pagination = GithubUserInfo.get_pagination(query)
+    pagination = Gi
+    users = GithubUserInfoSchema(**schema_args).dump(items)
 
     return jsonify({
-        "data": user_schema.dump(users),
-        "numbers_of_records": len(users)
+        "data": users,
+        "numbers_of_records": len(users),
+        "pagination": pagination
     })
+
 
 @users_api.route('/users/<int:github_user_id>', methods=['GET'])
 def get_user_info(github_user_id: int):
@@ -26,6 +29,7 @@ def get_user_info(github_user_id: int):
     return jsonify({
         'data': info_schema.dump(github_user)
     })
+
 
 @users_api.route('/users', methods=['POST'])
 @validate_json_content_type
@@ -37,6 +41,7 @@ def create_user_info(args: dict):
     db.session.commit()
 
     return jsonify({'data': info_schema.dump(github_user)}),  201
+
 
 @users_api.route('/users/<int:github_user_id>', methods=['PUT'])
 @validate_json_content_type
@@ -53,6 +58,7 @@ def update_user_info(args: dict, github_user_id: int):
     db.session.commit()
 
     return jsonify({'data': info_schema.dump(github_user)})
+
 
 @users_api.route('/users/<int:github_user_id>', methods=['DELETE'])
 def delete_user_info(github_user_id: int):

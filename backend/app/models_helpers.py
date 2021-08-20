@@ -8,6 +8,7 @@ from .models import GithubUserInfo, GithubUserInfoSchema
 
 LANGUAGE_LIST = ["JavaScript", "Java", "Python", "PHP", "C++", "C#", "TypeScript", "R", "Swift", "Kotlin", "Rust", "Julia"]
 
+
 def create_fake_info(count=10):
     """Create sample data to database"""
     seed()

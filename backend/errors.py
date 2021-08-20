@@ -14,8 +14,8 @@ class ErrorResponse:
 
     def __init__(self, message: str, http_status: int):
         self.playload = {
-            "success":False,
-            "message":message
+            "success": False,
+            "message": message
         }
         self.http_status = http_status
 

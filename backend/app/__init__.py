@@ -1,16 +1,29 @@
 from flask import Flask
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from ..config import config
 
+
 db = SQLAlchemy()
+migrate = Migrate()
 
 
-def create_app(config_name):
+def create_app(config_name="development"):
     app = Flask(__name__)
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config.from_object(config[config_name])
 
     db.init_app(app)
+    migrate.init_app(app, db)
+
+    from backend.commands import db_manage_bp
+    app.register_blueprint(db_manage_bp)
+
+    from backend.errors import errors_bp
+    app.register_blueprint(errors_bp)
+
+    from backend.app.api.ver_1_0 import users_api
+    app.register_blueprint(users_api)
 
     # fmt: off
     from .main import main as main_blueprint

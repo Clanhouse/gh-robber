@@ -1,13 +1,12 @@
 import re
 from . import db
 from marshmallow import Schema, fields, validate, validates,  ValidationError
-from flask import request, url_for
+from flask import request, url_for, current_app
 from flask_sqlalchemy import BaseQuery
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.sql.expression import BinaryExpression
 from typing import Tuple
 from datetime import datetime
-
 from backend.config import Config
 
 COMPARISON_OPERATOR_RE = re.compile(r"(.*)\[(gte|gt|lte|lt)\]")
@@ -105,22 +104,22 @@ class GithubUserInfo(db.Model):
     @staticmethod
     def get_pagination(query: BaseQuery) -> Tuple[list, dict]:
         page = request.args.get("page", 1, type=int)
-        limit = request.args.get("limit", Config.PER_PAGE, type=int)
+        limit = request.args.get("limit", current_app.config.get("PER_PAGE", 5), type=int)
         params = {k: v for k, v in request.args.items() if k != "page"}
         paginate_object = query.paginate(page, limit, False)
         pagination = {
             "total_pages": paginate_object.pages,
             "total_records": paginate_object.total,
-            "current_page": url_for("get_users_info", page=page, **params)
+            "current_page": url_for("api.users_api.get_users_info", page=page, **params)
         }
 
         if paginate_object.has_next:
-            pagination["next_page"] = url_for("get_users_info", page=page+1, **params)
+            pagination["next_page"] = url_for("api.users_api.get_users_info", page=page+1, **params)
 
         if paginate_object.has_prev:
-            pagination["previous_page"] = url_for("get_users_info", page=page-1, **params)
+            pagination["previous_page"] = url_for("api.users_api.get_users_info", page=page-1, **params)
 
-        return paginate_object.items(),  pagination
+        return paginate_object.items,  pagination
 
 
 class GithubUserInfoSchema(Schema):

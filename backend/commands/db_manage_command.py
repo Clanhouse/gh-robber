@@ -1,19 +1,19 @@
 from pathlib import Path
 import json
 
-from . import app
-from .app import db, app
-from .app.models import User, GithubUser, GithubUserInfo, GithubUserInfoSchema
-from .app.models_helpers import create_fake_info
+from backend.app import db
+from backend.app.models import GithubUserInfo, GithubUserInfoSchema
+from backend.app.models_helpers import create_fake_info
+from . import db_manage_bp
 
 
-@app.cli.group()
+@db_manage_bp.cli.group()
 def db_manage():
     """Database management command"""
     pass
 
 
-@db.manage.command()
+@db_manage.command()
 def add_data():
     """Add sample data to database"""
     try:
@@ -24,7 +24,7 @@ def add_data():
         print(f"Unexpected error: {exc}")
 
 
-@db.manage.command()
+@db_manage.command()
 def remove_data():
     """Remove all data form database"""
     try:

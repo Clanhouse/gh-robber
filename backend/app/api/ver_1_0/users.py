@@ -13,7 +13,6 @@ def get_users_info():
     query = GithubUserInfo.apply_order(query, request.args.get("sort"))
     query = GithubUserInfo.apply_filter(query)
     items, pagination = GithubUserInfo.get_pagination(query)
-    pagination = Gi
     users = GithubUserInfoSchema(**schema_args).dump(items)
 
     return jsonify({

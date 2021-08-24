@@ -122,6 +122,15 @@ class GithubUserInfo(db.Model):
         return paginate_object.items,  pagination
 
 
+class User(db.Model):
+    __tablename__= "users"
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(250), nullable=False, unique=True)
+    email = db.Column(db.String(250), nullable=False, unique=True)
+    password = db.Column(db.String(250), nullable=False)
+    creation_date = db.Column(db.DateTime, default=datetime.utcnow)
+
+
 class GithubUserInfoSchema(Schema):
 
     class Meta:
@@ -142,4 +151,13 @@ class GithubUserInfoSchema(Schema):
             raise ValidationError(f'Date must be earlier than {datetime.now().date()}')
 
 
+class UserSchema(Schema):
+    id = fields.Integer(dump_only=True)
+    username = fields.String(required=True, validate=validate.Length(max=250))
+    email = fields.Email(required=True)
+    password = fields.String(required=True, load_only=True, validate=validate.Length(min=4, max=250))
+    creation_date = fields.DateTime(dump_only=True)
+
+
 info_schema = GithubUserInfoSchema()
+user_schema = UserSchema()

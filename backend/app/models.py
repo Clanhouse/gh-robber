@@ -22,7 +22,7 @@ class GithubUserInfo(db.Model):
     number_of_repositories = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
-        return f"<{self.__class__.__name__}>: {self.username}"
+        return f"<{self.__class__.__name__}->: {self.username}"
 
     def __init__(self, id, username, language, date, stars, number_of_repositories):
         self.id = id
@@ -57,7 +57,7 @@ class GithubUserInfo(db.Model):
         Sort data in ascending or descending order
         key == sort
         value == id, username, language, date, stars, number_of_repositories
-        sort ascending example:  http://127.0.0.1:5000/api/v1.0/users/search?sort=id,username
+        sort ascending example:  http://127.0.0.1:5000/api/v1.0/users/users?sort=id,username
         sort descending example:  http://127.0.0.1:5000/api/v1.0/users/search?sort=-id,username
         """
         if sort_keys:

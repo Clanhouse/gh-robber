@@ -1,10 +1,10 @@
 from flask import abort
 from webargs.flaskparser import use_args
 
-from backend.auth import auth
+from backend.app import db
+from backend.auth import auth_bp
 from backend.app.models import User, user_schema
 from backend.utils import validate_json_content_type
-
 
 
 @auth_bp.route('/register', methods=['POST'])
@@ -15,3 +15,11 @@ def register(args: dict):
         abort(409, description=f"User with username {args['username']} already exists")
     if User.query.filter(User.email == args["email"]).first():
         abort(409, description=f"User with email {args['email']} already exists")
+
+    args['password'] = User.generate_hashed_password(args['passwordd'])
+    user = User(**args)
+
+    db.sesion.add(user)
+    db.sesion.commit()
+
+    token = User

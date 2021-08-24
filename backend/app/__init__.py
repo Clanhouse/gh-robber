@@ -19,11 +19,11 @@ def create_app(config_name="development"):
     from backend.commands import db_manage_bp
     from backend.errors import errors_bp
     from backend.app.api.ver_1_0 import users_api
-    from backend.auth import autth_bp
+    from backend.auth import auth_bp
     app.register_blueprint(db_manage_bp)
     app.register_blueprint(errors_bp)
     app.register_blueprint(users_api)
-    app.register_blueprint(autth_bp, url_prefix="/api/v1.0/auth")
+    app.register_blueprint(auth_bp, url_prefix="/api/v1.0/auth")
 
     # fmt: off
     from .main import main as main_blueprint

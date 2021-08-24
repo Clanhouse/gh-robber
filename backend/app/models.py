@@ -1,13 +1,17 @@
 import re
-from . import db
-from marshmallow import Schema, fields, validate, validates,  ValidationError
+import jwt
+from typing import Tuple
+from datetime import datetime, timedelta
 from flask import request, url_for, current_app
 from flask_sqlalchemy import BaseQuery
+from marshmallow import Schema, fields, validate, validates,  ValidationError
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.sql.expression import BinaryExpression
-from typing import Tuple
-from datetime import datetime
+from werkzeug.security import generate_password_hash
+
+from . import db
 from backend.config import Config
+
 
 COMPARISON_OPERATOR_RE = re.compile(r"(.*)\[(gte|gt|lte|lt)\]")
 
@@ -130,6 +134,16 @@ class User(db.Model):
     password = db.Column(db.String(250), nullable=False)
     creation_date = db.Column(db.DateTime, default=datetime.utcnow)
 
+    @staticmethod
+    def generate_hashed_password(self, password=str) -> str:
+        return generate_password_hash(password)
+
+    def generate_jwt(self):
+        payload = {
+            "user_id":self.id,
+            "exp":datetime.utcnow() + timedelta(minutes=current_app.config.get("JWT_EXPIRED_MINUTES", 30))
+        }
+        return jwt.encode(payload, current_app.config.get("SECRET_KEY"))
 
 class GithubUserInfoSchema(Schema):
 

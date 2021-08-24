@@ -11,6 +11,7 @@ class Config:
     PER_PAGE = 5
     SQLALCHEMY_TRACK_MODIFICATION = False
     SQLALCHEMY_DATABASE_URI = ""
+    JWT_EXPIRED_MINUTES = 30
 
     @staticmethod
     def init_app(app):

@@ -1,9 +1,9 @@
 import os
 from flask import Response, jsonify
+from flask_migrate import Migrate, upgrade
 
 from backend.app import db
 from backend.app import create_app
-from flask_migrate import Migrate, upgrade
 from backend.errors import errors_bp
 
 app = create_app()
@@ -25,15 +25,20 @@ class ErrorResponse:
         return response
 
 
-@errors_bp.app_errorhandler(404)
-def not_found_error(err):
-    return ErrorResponse(err.description, 404).to_response()
-
-
 @errors_bp.app_errorhandler(400)
 def bad_request_error(err):
     messages = err.data.get('messages', {}).get('json', {})
-    return ErrorResponse(messages, 404).to_response()
+    return ErrorResponse(messages, 400).to_response()
+
+
+@errors_bp.app_errorhandler(401)
+def unauthorized_error(err):
+    return ErrorResponse(err.description, 401).to_response()
+
+
+@errors_bp.app_errorhandler(404)
+def not_found_error(err):
+    return ErrorResponse(err.description, 404).to_response()
 
 
 @errors_bp.app_errorhandler(415)

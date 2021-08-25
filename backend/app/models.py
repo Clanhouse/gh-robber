@@ -7,7 +7,7 @@ from flask_sqlalchemy import BaseQuery
 from marshmallow import Schema, fields, validate, validates,  ValidationError
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.sql.expression import BinaryExpression
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from . import db
 from backend.config import Config
@@ -135,15 +135,19 @@ class User(db.Model):
     creation_date = db.Column(db.DateTime, default=datetime.utcnow)
 
     @staticmethod
-    def generate_hashed_password(self, password=str) -> str:
+    def generate_hashed_password(password=str) -> str:
         return generate_password_hash(password)
 
-    def generate_jwt(self):
+    def is_password_valid(self, password:str) -> bool:
+        return check_password_hash(self.password, password)
+
+    def generate_jwt(self) -> bytes:
         payload = {
             "user_id":self.id,
             "exp":datetime.utcnow() + timedelta(minutes=current_app.config.get("JWT_EXPIRED_MINUTES", 30))
         }
         return jwt.encode(payload, current_app.config.get("SECRET_KEY"))
+
 
 class GithubUserInfoSchema(Schema):
 

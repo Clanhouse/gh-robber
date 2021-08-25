@@ -3,7 +3,7 @@ from webargs.flaskparser import use_args
 from backend.app import db
 from backend.app.api.ver_1_0 import users_api
 from backend.app.models import GithubUserInfo, GithubUserInfoSchema, info_schema
-from backend.utils import validate_json_content_type
+from backend.utils import validate_json_content_type, token_required
 
 
 @users_api.route("/users", methods=['GET'])
@@ -31,9 +31,10 @@ def get_user_info(github_user_id: int):
 
 
 @users_api.route('/users', methods=['POST'])
+@token_required
 @validate_json_content_type
 @use_args(info_schema, error_status_code=400)
-def create_user_info(args: dict):
+def create_user_info(user_id: str, args: dict):
     github_user = GithubUserInfo(**args)
 
     db.session.add(github_user)
@@ -43,9 +44,10 @@ def create_user_info(args: dict):
 
 
 @users_api.route('/users/<int:github_user_id>', methods=['PUT'])
+@token_required
 @validate_json_content_type
 @use_args(info_schema, error_status_code=400)
-def update_user_info(args: dict, github_user_id: int):
+def update_user_info(user_id: str, args: dict, github_user_id: int):
     github_user = GithubUserInfo.query.get_or_404(github_user_id, description=f'Github user with id {github_user_id} not found')
 
     github_user.username = args['username']
@@ -60,7 +62,8 @@ def update_user_info(args: dict, github_user_id: int):
 
 
 @users_api.route('/users/<int:github_user_id>', methods=['DELETE'])
-def delete_user_info(github_user_id: int):
+@token_required
+def delete_user_info(user_id: str, github_user_id: int):
     github_user = GithubUserInfo.query.get_or_404(github_user_id, description=f'Github user with id {github_user_id} not found')
 
     db.session.delete(github_user)

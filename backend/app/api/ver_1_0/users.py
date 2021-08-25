@@ -22,7 +22,7 @@ def get_users_info():
     })
 
 
-@users_api.route('/users/<int:github_user_id>', methods=['GET'])
+@users_api.route('/users/<int:github_>', methods=['GET'])
 def get_user_info(github_user_id: int):
     github_user = GithubUserInfo.query.get_or_404(github_user_id, description=f'Github user with id {github_user_id} not found')
     return jsonify({
@@ -34,7 +34,7 @@ def get_user_info(github_user_id: int):
 @token_required
 @validate_json_content_type
 @use_args(info_schema, error_status_code=400)
-def create_user_info(user_id: str, args: dict):
+def create_user_info(user_id: int, args: dict):
     github_user = GithubUserInfo(**args)
 
     db.session.add(github_user)
@@ -47,7 +47,7 @@ def create_user_info(user_id: str, args: dict):
 @token_required
 @validate_json_content_type
 @use_args(info_schema, error_status_code=400)
-def update_user_info(user_id: str, args: dict, github_user_id: int):
+def update_user_info(user_id: int, args: dict, github_user_id: int):
     github_user = GithubUserInfo.query.get_or_404(github_user_id, description=f'Github user with id {github_user_id} not found')
 
     github_user.username = args['username']
@@ -63,7 +63,7 @@ def update_user_info(user_id: str, args: dict, github_user_id: int):
 
 @users_api.route('/users/<int:github_user_id>', methods=['DELETE'])
 @token_required
-def delete_user_info(user_id: str, github_user_id: int):
+def delete_user_info(user_id: int, github_user_id: int):
     github_user = GithubUserInfo.query.get_or_404(github_user_id, description=f'Github user with id {github_user_id} not found')
 
     db.session.delete(github_user)

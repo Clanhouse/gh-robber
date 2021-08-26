@@ -1,10 +1,10 @@
 from flask import abort, jsonify
 from webargs.flaskparser import use_args
 
-from backend.app import db
-from backend.auth import auth_bp
-from backend.app.models import User, user_schema, UserSchema, user_password_update_schema
-from backend.utils import validate_json_content_type, token_required
+from app import db
+from app.auth import auth_bp
+from app.models import User, user_schema, UserSchema, user_password_update_schema
+from app.utils import validate_json_content_type, token_required
 
 
 @auth_bp.route('/register', methods=['POST'])
@@ -27,7 +27,7 @@ def register(args: dict):
     return jsonify({
         "success": True,
         "token": token.decode()
-    })
+    }), 201
 
 
 @auth_bp.route('/login', methods=['POST'])

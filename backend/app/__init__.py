@@ -16,10 +16,10 @@ def create_app(config_name="development"):
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from backend.commands import db_manage_bp
-    from backend.errors import errors_bp
-    from backend.app.api.ver_1_0 import users_api
-    from backend.auth import auth_bp
+    from app.commands import db_manage_bp
+    from app.errors import errors_bp
+    from app.api.ver_1_0 import users_api
+    from app.auth import auth_bp
     app.register_blueprint(db_manage_bp)
     app.register_blueprint(errors_bp)
     app.register_blueprint(users_api)

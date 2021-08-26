@@ -1,10 +1,6 @@
-from pathlib import Path
-import json
-
-from backend.app import db
-from backend.app.models import GithubUserInfo, GithubUserInfoSchema
-from backend.app.models_helpers import create_fake_info
-from . import db_manage_bp
+from app import db
+from app.models_helpers import create_fake_info
+from app.commands import db_manage_bp
 
 
 @db_manage_bp.cli.group()

@@ -22,7 +22,7 @@ def get_users_info():
     })
 
 
-@users_api.route('/users/<int:github_>', methods=['GET'])
+@users_api.route('/users/<int:github_user_id>', methods=['GET'])
 def get_user_info(github_user_id: int):
     github_user = GithubUserInfo.query.get_or_404(github_user_id, description=f'Github user with id {github_user_id} not found')
     return jsonify({

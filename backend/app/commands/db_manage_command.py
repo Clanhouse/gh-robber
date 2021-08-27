@@ -1,6 +1,6 @@
-from app import db
-from app.models_helpers import create_fake_info
-from app.commands import db_manage_bp
+from backend.app import db
+from backend.app.models_helpers import create_fake_info
+from backend.app.commands import db_manage_bp
 
 
 @db_manage_bp.cli.group()
@@ -24,8 +24,8 @@ def add_data():
 def remove_data():
     """Remove all data form database"""
     try:
-        db.session.execute("TRUNCATE TABLE user_info")
-        db.session.cmmit()
+        db.session.execute("DROP TABLE github_users_info")
+        db.session.commit()
         print("Data has been successfully removed from database")
     except Exception as exc:
         print(f"Unexpected error: {exc}")

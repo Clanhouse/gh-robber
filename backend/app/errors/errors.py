@@ -2,9 +2,9 @@ import os
 from flask import Response, jsonify
 from flask_migrate import Migrate, upgrade
 
-from app import db
-from app import create_app
-from app.errors import errors_bp
+from backend.app import db
+from backend.app import create_app
+from backend.app.errors import errors_bp
 
 app = create_app()
 migrate = Migrate(db)

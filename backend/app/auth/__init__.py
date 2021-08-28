@@ -2,5 +2,5 @@ from flask import Blueprint
 
 auth_bp = Blueprint("auth", __name__)
 
-from backend.app.auth import auth
+from app.auth import auth
 

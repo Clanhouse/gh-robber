@@ -10,7 +10,7 @@ from sqlalchemy.sql.expression import BinaryExpression
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from . import db
-from backend.config import Config
+from config import Config
 
 
 COMPARISON_OPERATOR_RE = re.compile(r"(.*)\[(gte|gt|lte|lt)\]")

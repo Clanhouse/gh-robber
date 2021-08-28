@@ -3,7 +3,7 @@ import forgery_py
 from sqlalchemy.exc import IntegrityError
 
 from . import db
-from backend.app.models import GithubUserInfo, GithubUserInfoSchema
+from app.models import GithubUserInfo, GithubUserInfoSchema
 
 
 LANGUAGE_LIST = ["JavaScript", "Java", "Python", "PHP", "C++", "C#", "TypeScript", "R", "Swift", "Kotlin", "Rust", "Julia"]

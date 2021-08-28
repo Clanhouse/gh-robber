@@ -5,12 +5,16 @@ from pathlib import Path
 # basedir = os.path.abspath(os.path.dirname(__file__))
 
 basedir = Path(__file__).resolve().parent
+env_file = basedir / ".env"
+load_dotenv(env_file)
 
 
 class Config:
-    PER_PAGE = 5
+    DEBUG=True
+    SECRET_KEY = os.environ.get("SECRET_KEY")
     SQLALCHEMY_TRACK_MODIFICATION = False
     SQLALCHEMY_DATABASE_URI = ""
+    PER_PAGE = 5
     JWT_EXPIRED_MINUTES = 30
 
     @staticmethod
@@ -19,7 +23,6 @@ class Config:
 
 
 class DevelopmentConfig(Config):
-    DEBUG = True
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DEV_DATABASE_URL"
@@ -27,18 +30,17 @@ class DevelopmentConfig(Config):
 
 
 class TestingConfig(Config):
-    DEBUG = True
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     DB_FILE_PATH = basedir / "tests" / "test.db"
     SQLALCHEMY_DATABASE_URI = f"sqlite:///{DB_FILE_PATH}"
     # SQLALCHEMY_DATABASE_URI = os.environ.get(
     #     "TEST_DATABASE_URL"
     # ) or "sqlite:///" + os.path.join(basedir, "data-testing.sqlite")
+    DEBUG = True
     TESTING = True
 
 
 class ProductionConfig(Config):
-    DEBUG = False
     SQLALCHEMY_COMMIT_ON_TEARDOWN = False
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DATABASE_URL"

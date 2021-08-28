@@ -1,5 +1,5 @@
-from backend.app.api.ver_1_0 import admin_api
-from backend.app.models_helpers import create_fake_info
+from app.api.ver_1_0 import admin_api
+from app.models_helpers import create_fake_info
 
 
 @admin_api.route("/init-fake-data/")

@@ -1,6 +1,6 @@
-from backend.app import db
-from backend.app.models_helpers import create_fake_info
-from backend.app.commands import db_manage_bp
+from app import db
+from app.models_helpers import create_fake_info
+from app.commands import db_manage_bp
 
 
 @db_manage_bp.cli.group()

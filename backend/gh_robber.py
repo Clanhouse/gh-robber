@@ -1,11 +1,9 @@
 import os
 
-import click
 from flask_migrate import Migrate, upgrade
-from .app.models_helpers import create_fake_info
-from .app.models import GithubUserInfo, GithubUserInfoSchema
-from .app import create_app
-from .app import db
+from app.models import GithubUserInfo
+from app import create_app
+from app import db
 
 app = create_app(os.getenv("FLASK_CONFIG") or "default")
 migrate = Migrate(app, db)

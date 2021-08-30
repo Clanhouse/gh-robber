@@ -9,9 +9,8 @@ def validate_json_content_type(func):
     def wrapper(*args, **kwargs):
         data = request.get_json()
         if data is None:
-            raise UnsupportedMediaType("Content type must be application/json")
+            raise UnsupportedMediaType('Content type must be application/json')
         return func(*args, **kwargs)
-
     return wrapper
 
 
@@ -34,4 +33,3 @@ def token_required(func):
         else:
             return func(payload['user_id'], *args, **kwargs)
     return wrapper
-

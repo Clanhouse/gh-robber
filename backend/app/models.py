@@ -28,14 +28,6 @@ class GithubUserInfo(db.Model):
     def __repr__(self):
         return f"<{self.__class__.__name__}->: {self.username}"
 
-    def __init__(self, id, username, language, date, stars, number_of_repositories):
-        self.id = id
-        self.username = username
-        self.language = language
-        self.date = date
-        self.stars = stars
-        self.number_of_repositories = number_of_repositories
-
     def create(self):
         db.session.add(self)
         db.session.commit()
@@ -43,13 +35,6 @@ class GithubUserInfo(db.Model):
 
     @staticmethod
     def get_args(fields: str) -> dict:
-        """
-        Dynamically building arguments to the GithubUserInfoSchema class, returns json with the selected keys.
-        key == fields
-        value == id, username, language, date, stars, number_of_repositories
-        example:  http://127.0.0.1:5000/api/v1.0/users/search?fields=id,username
-        example:  http://127.0.0.1:5000/api/v1.0/users/search?fields=username,language
-        """
         schema_args = {"many": True}
         if fields:
             schema_args["only"] = [field for field in fields.split(",") if field in GithubUserInfo.__table__.columns]
@@ -57,13 +42,6 @@ class GithubUserInfo(db.Model):
 
     @staticmethod
     def apply_order(query: BaseQuery, sort_keys: str) -> BaseQuery:
-        """
-        Sort data in ascending or descending order
-        key == sort
-        value == id, username, language, date, stars, number_of_repositories
-        sort ascending example:  http://127.0.0.1:5000/api/v1.0/users/users?sort=id,username
-        sort descending example:  http://127.0.0.1:5000/api/v1.0/users/search?sort=-id,username
-        """
         if sort_keys:
             for key in sort_keys.split(","):
                 desc = False
@@ -127,7 +105,7 @@ class GithubUserInfo(db.Model):
 
 
 class User(db.Model):
-    __tablename__= "users"
+    __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(250), nullable=False, unique=True)
     email = db.Column(db.String(250), nullable=False, unique=True)
@@ -138,23 +116,18 @@ class User(db.Model):
     def generate_hashed_password(password=str) -> str:
         return generate_password_hash(password)
 
-    def is_password_valid(self, password:str) -> bool:
+    def is_password_valid(self, password: str) -> bool:
         return check_password_hash(self.password, password)
 
     def generate_jwt(self) -> bytes:
         payload = {
-            "user_id":self.id,
-            "exp":datetime.utcnow() + timedelta(minutes=current_app.config.get("JWT_EXPIRED_MINUTES", 30))
+            "user_id": self.id,
+            "exp": datetime.utcnow() + timedelta(minutes=current_app.config.get("JWT_EXPIRED_MINUTES", 30))
         }
         return jwt.encode(payload, current_app.config.get("SECRET_KEY"))
 
 
 class GithubUserInfoSchema(Schema):
-
-    class Meta:
-        model = GithubUserInfo
-        load_instance = True
-
     """Serialization to json format"""
     id = fields.Integer(dump_only=True)
     username = fields.String(required=True, validate=validate.Length(max=50))
@@ -180,6 +153,7 @@ class UserSchema(Schema):
 class UserPasswordUpdateSchema(Schema):
     current_password = fields.String(required=True, load_only=True, validate=validate.Length(min=6, max=250))
     new_password = fields.String(required=True, load_only=True, validate=validate.Length(min=6, max=250))
+
 
 info_schema = GithubUserInfoSchema()
 user_schema = UserSchema()

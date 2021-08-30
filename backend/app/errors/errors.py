@@ -1,26 +1,24 @@
-import os
 from flask import Response, jsonify
-from flask_migrate import Migrate, upgrade
+# from flask_migrate import Migrate, upgrade
 
 from app import db
-from app import create_app
+# from app import create_app
 from app.errors import errors_bp
 
-app = create_app()
-migrate = Migrate(db)
+# app = create_app()
+# migrate = Migrate(db)
 
 
 class ErrorResponse:
-
     def __init__(self, message: str, http_status: int):
-        self.playload = {
-            "success": False,
-            "message": message
+        self.payload = {
+            'success': False,
+            'message': message
         }
         self.http_status = http_status
 
     def to_response(self) -> Response:
-        response = jsonify(self.playload)
+        response = jsonify(self.payload)
         response.status_code = self.http_status
         return response
 

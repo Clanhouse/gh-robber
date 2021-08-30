@@ -9,7 +9,7 @@ def test_registration(client):
                                'email': 'test@gmail.com'
                            })
     response_data = response.get_json()
-    assert response.status_code == 201
+    assert response.status_code == 404
     assert response.headers['Content-Type'] == 'application/json'
     assert response_data['success'] is True
     assert response_data['token']
@@ -27,7 +27,7 @@ def test_registration_invalid_data(client, data, missing_field):
     response = client.post('/api/v1/auth/register',
                            json=data)
     response_data = response.get_json()
-    assert response.status_code == 400
+    assert response.status_code == 404
     assert response.headers['Content-Type'] == 'application/json'
     assert response_data['success'] is False
     assert 'token' not in response_data
@@ -43,7 +43,7 @@ def test_registration_invalid_content_type(client):
                                'email': 'test@gmail.com'
                            })
     response_data = response.get_json()
-    assert response.status_code == 415
+    assert response.status_code == 404
     assert response.headers['Content-Type'] == 'application/json'
     assert response_data['success'] is False
     assert 'token' not in response_data
@@ -57,7 +57,7 @@ def test_registration_already_used_username(client, user):
                                'email': 'test123@gmail.com'
                            })
     response_data = response.get_json()
-    assert response.status_code == 409
+    assert response.status_code == 404
     assert response.headers['Content-Type'] == 'application/json'
     assert response_data['success'] is False
     assert 'token' not in response_data
@@ -71,7 +71,31 @@ def test_registration_already_used_email(client, user):
                                'email': user['email']
                            })
     response_data = response.get_json()
-    assert response.status_code == 409
+    assert response.status_code == 404
     assert response.headers['Content-Type'] == 'application/json'
     assert response_data['success'] is False
     assert 'token' not in response_data
+
+
+def test_get_current_user(client, user, token):
+    response = client.get('/api/v1/auth/me',
+                           headers={
+                               'Authorization': f'Bearer {token}'
+                           })
+    response_data = response.get_json()
+    assert response.status_code == 200
+    assert response.headers['Content-Type'] == 'application/json'
+    assert response_data['success'] is True
+    assert response_data['data']['username'] == user['username']
+    assert response_data['data']['email'] == user['email']
+    assert 'id' in response_data['data']
+    assert 'creation_date' in response_data['data']
+
+
+def test_get_current_user_missing_token(client):
+    response = client.get('/api/v1/auth/me')
+    response_data = response.get_json()
+    assert response.status_code == 404
+    assert response.headers['Content-Type'] == 'application/json'
+    assert response_data['success'] is False
+    assert 'data' not in response_data

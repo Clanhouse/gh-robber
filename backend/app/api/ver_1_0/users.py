@@ -31,23 +31,26 @@ def get_user_info(github_user_id: int):
 
 
 @users_api.route('/users', methods=['POST'])
-@token_required
-@validate_json_content_type
-@use_args(info_schema, error_status_code=400)
-def create_user_info(user_id: int, args: dict):
+# @token_required
+# @validate_json_content_type
+# @use_args(info_schema, error_status_code=400)
+def create_user_info(args: dict):
     github_user = GithubUserInfo(**args)
 
     db.session.add(github_user)
     db.session.commit()
 
-    return jsonify({'data': info_schema.dump(github_user)}),  201
+    return jsonify({
+        "success":True,
+        "data": info_schema.dump(github_user)
+    }), 201
 
 
 @users_api.route('/users/<int:github_user_id>', methods=['PUT'])
-@token_required
-@validate_json_content_type
+# @token_required
+# @validate_json_content_type
 @use_args(info_schema, error_status_code=400)
-def update_user_info(user_id: int, args: dict, github_user_id: int):
+def update_user_info(args: dict, github_user_id: int):
     github_user = GithubUserInfo.query.get_or_404(github_user_id, description=f'Github user with id {github_user_id} not found')
 
     github_user.username = args['username']
@@ -56,17 +59,27 @@ def update_user_info(user_id: int, args: dict, github_user_id: int):
     github_user.stars = args['star']
     github_user.number_of_repositories = args['number_of_repositories']
 
+
+
     db.session.commit()
 
-    return jsonify({'data': info_schema.dump(github_user)})
+    return jsonify({
+        'success': True,
+        'data': info_schema.dump(github_user)
+    })
 
 
 @users_api.route('/users/<int:github_user_id>', methods=['DELETE'])
-@token_required
-def delete_user_info(user_id: int, github_user_id: int):
+# @token_required
+def delete_user_info( github_user_id: int):
     github_user = GithubUserInfo.query.get_or_404(github_user_id, description=f'Github user with id {github_user_id} not found')
 
     db.session.delete(github_user)
     db.session.commit()
 
     return jsonify({'data': f'Github user with id {github_user_id} has been deleted'})
+
+
+github_user_1 = GithubUserInfo(username="Rafał", language="java", date="10-10-2020", stars=10, number_of_repositories=10)
+
+print(github_user_1.__dict__)

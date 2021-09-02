@@ -109,7 +109,7 @@ def test_create_github_user(client, token, github_user_info):
         ({"username": "test", "language": "language", "date": "10-10-2000", "stars": 10}, "number_of_repositories")
     ]
 )
-def test_create_github_user_invalid_data(client, token,  data, missing_field):
+def test_create_github_user_info_invalid_data(client, token,  data, missing_field):
     response = client.post("/api/v1/users/users",
                                 json=data,
                                 headers={
@@ -121,3 +121,29 @@ def test_create_github_user_invalid_data(client, token,  data, missing_field):
     assert "token" not in response_data
     assert missing_field in response_data["message"]
     assert "Missing data for required field." in response_data["message"][missing_field]
+
+
+
+
+
+
+
+def test_create_github_user_info_invalid_content_type(client, token, github_user_info):
+    response = client.post("/api/v1/users/users",
+                           data=github_user_info,
+                           headers={
+                               "Authorization": f"Bearer {token}"
+                           })
+    response_data = response.get_json()
+    assert response.status_code == 415
+    assert response.headers["Content-Type"] == "application/json"
+    assert "data" not in response_data
+
+
+def test_create_github_user_info_missing_token(client, github_user_info):
+    response = client.post("/api/v1/users/users",
+                           json=github_user_info)
+    response_data = response.get_json()
+    assert response.status_code == 401
+    assert response.headers["Content-Type"] == "application/json"
+    assert "data" not in response_data

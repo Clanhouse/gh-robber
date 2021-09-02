@@ -10,7 +10,7 @@ load_dotenv(env_file)
 
 
 class Config:
-    DEBUG=True
+    DEBUG= True
     SECRET_KEY = os.environ.get("SECRET_KEY")
     SQLALCHEMY_TRACK_MODIFICATION = False
     SQLALCHEMY_DATABASE_URI = ""

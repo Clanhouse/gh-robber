@@ -32,8 +32,8 @@ def get_user_info(github_user_id: int):
 
 @users_api.route('/users', methods=['POST'])
 # @token_required
-# @validate_json_content_type
-# @use_args(info_schema, error_status_code=400)
+@validate_json_content_type
+@use_args(info_schema, error_status_code=400)
 def create_user_info(args: dict):
     github_user = GithubUserInfo(**args)
 
@@ -48,7 +48,7 @@ def create_user_info(args: dict):
 
 @users_api.route('/users/<int:github_user_id>', methods=['PUT'])
 # @token_required
-# @validate_json_content_type
+@validate_json_content_type
 @use_args(info_schema, error_status_code=400)
 def update_user_info(args: dict, github_user_id: int):
     github_user = GithubUserInfo.query.get_or_404(github_user_id, description=f'Github user with id {github_user_id} not found')
@@ -58,8 +58,6 @@ def update_user_info(args: dict, github_user_id: int):
     github_user.date = args['date']
     github_user.stars = args['star']
     github_user.number_of_repositories = args['number_of_repositories']
-
-
 
     db.session.commit()
 
@@ -78,8 +76,3 @@ def delete_user_info( github_user_id: int):
     db.session.commit()
 
     return jsonify({'data': f'Github user with id {github_user_id} has been deleted'})
-
-
-github_user_1 = GithubUserInfo(username="Rafał", language="java", date="10-10-2020", stars=10, number_of_repositories=10)
-
-print(github_user_1.__dict__)

@@ -23,7 +23,7 @@ def create_app(config_name="development"):
     app.register_blueprint(db_manage_bp)
     app.register_blueprint(errors_bp)
     app.register_blueprint(users_api)
-    app.register_blueprint(auth_bp, url_prefix="/api/v1.0/auth")
+    app.register_blueprint(auth_bp, url_prefix="/auth")
 
     # fmt: off
     from .main import main as main_blueprint

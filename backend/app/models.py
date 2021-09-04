@@ -50,7 +50,7 @@ class GithubUserInfo(db.Model):
                     desc = True
                 column_attr = getattr(GithubUserInfo, key, None)
                 if column_attr is not None:
-                    query = query.order_by(column_attr.desc()) if desc() else query.order_by(column_attr)
+                    query = query.order_by(column_attr.desc()) if desc else query.order_by(column_attr)
         return query
 
     @staticmethod
@@ -119,7 +119,7 @@ class User(db.Model):
     def is_password_valid(self, password: str) -> bool:
         return check_password_hash(self.password, password)
 
-    def generate_jwt(self) -> bytes:
+    def generate_jwt(self) -> str:
         payload = {
             "user_id": self.id,
             "exp": datetime.utcnow() + timedelta(minutes=current_app.config.get("JWT_EXPIRED_MINUTES", 30))

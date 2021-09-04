@@ -33,3 +33,4 @@ def token_required(func):
         else:
             return func(payload['user_id'], *args, **kwargs)
     return wrapper
+

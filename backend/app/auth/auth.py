@@ -26,7 +26,7 @@ def register(args: dict):
 
     return jsonify({
         "success": True,
-        "token": token.decode()
+        "token": token
     }), 201
 
 
@@ -44,7 +44,7 @@ def login(args: dict):
 
     return jsonify({
         "success": True,
-        "token": token.decode()
+        "token": token
     })
 
 

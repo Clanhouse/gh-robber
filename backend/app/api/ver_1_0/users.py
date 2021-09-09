@@ -23,7 +23,7 @@ def get_users_info():
 
 
 @users_api.route('/users/<int:github_user_id>', methods=['GET'])
-def get_user_info(github_user_id: int):
+def get_user_info(user_id: int, github_user_id: int):
     github_user = GithubUserInfo.query.get_or_404(github_user_id, description=f'Github user with id {github_user_id} not found')
     return jsonify({
         'data': info_schema.dump(github_user)
@@ -31,45 +31,45 @@ def get_user_info(github_user_id: int):
 
 
 @users_api.route('/users', methods=['POST'])
-# @token_required
+@token_required
 @validate_json_content_type
 @use_args(info_schema, error_status_code=400)
-def create_user_info(args: dict):
+def create_user_info(user_id: int, args: dict):
     github_user = GithubUserInfo(**args)
 
     db.session.add(github_user)
     db.session.commit()
 
     return jsonify({
-        "success":True,
+        "success": True,
         "data": info_schema.dump(github_user)
     }), 201
 
 
-@users_api.route('/users/<int:github_user_id>', methods=['PUT'])
-# @token_required
+@users_api.route("/users/<int:github_user_id>", methods=["PUT"])
+@token_required
 @validate_json_content_type
 @use_args(info_schema, error_status_code=400)
-def update_user_info(args: dict, github_user_id: int):
-    github_user = GithubUserInfo.query.get_or_404(github_user_id, description=f'Github user with id {github_user_id} not found')
+def update_user_info(user_id: int, args: dict, github_user_id: int):
+    github_user = GithubUserInfo.query.get_or_404(github_user_id, description=f"Github user with id {github_user_id} not found")
 
-    github_user.username = args['username']
-    github_user.language = args['language']
-    github_user.date = args['date']
-    github_user.stars = args['star']
-    github_user.number_of_repositories = args['number_of_repositories']
+    github_user.username = args["username"]
+    github_user.language = args["language"]
+    github_user.date = args["date"]
+    github_user.stars = args["stars"]
+    github_user.number_of_repositories = args["number_of_repositories"]
 
     db.session.commit()
 
     return jsonify({
-        'success': True,
-        'data': info_schema.dump(github_user)
+        "success": True,
+        "data": info_schema.dump(github_user)
     })
 
 
 @users_api.route('/users/<int:github_user_id>', methods=['DELETE'])
-# @token_required
-def delete_user_info( github_user_id: int):
+@token_required
+def delete_user_info(user_id: int, github_user_id: int):
     github_user = GithubUserInfo.query.get_or_404(github_user_id, description=f'Github user with id {github_user_id} not found')
 
     db.session.delete(github_user)

@@ -10,7 +10,7 @@ load_dotenv(env_file)
 
 
 class Config:
-    DEBUG= True
+    DEBUG = True
     SECRET_KEY = os.environ.get("SECRET_KEY")
     SQLALCHEMY_TRACK_MODIFICATION = False
     SQLALCHEMY_DATABASE_URI = ""
@@ -33,9 +33,6 @@ class TestingConfig(Config):
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     DB_FILE_PATH = basedir / "tests" / "test.db"
     SQLALCHEMY_DATABASE_URI = f"sqlite:///{DB_FILE_PATH}"
-    # SQLALCHEMY_DATABASE_URI = os.environ.get(
-    #     "TEST_DATABASE_URL"
-    # ) or "sqlite:///" + os.path.join(basedir, "data-testing.sqlite")
     DEBUG = True
     TESTING = True
 

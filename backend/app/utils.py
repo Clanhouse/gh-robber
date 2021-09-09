@@ -1,5 +1,5 @@
 import jwt
-from flask import request, url_for, current_app, abort
+from flask import request, current_app, abort
 from werkzeug.exceptions import UnsupportedMediaType
 from functools import wraps
 
@@ -33,4 +33,3 @@ def token_required(func):
         else:
             return func(payload['user_id'], *args, **kwargs)
     return wrapper
-

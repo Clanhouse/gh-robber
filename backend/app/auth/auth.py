@@ -7,7 +7,7 @@ from app.models import User, user_schema, UserSchema, user_password_update_schem
 from app.utils import validate_json_content_type, token_required
 
 
-@auth_bp.route('/register', methods=['POST'])
+@auth_bp.route("/register", methods=["POST"])
 @validate_json_content_type
 @use_args(user_schema, error_status_code=400)
 def register(args: dict):
@@ -16,11 +16,11 @@ def register(args: dict):
     if User.query.filter(User.email == args["email"]).first():
         abort(409, description=f"User with email {args['email']} already exists")
 
-    args['password'] = User.generate_hashed_password(args['password'])
+    args["password"] = User.generate_hashed_password(args["password"])
     user = User(**args)
 
-    db.sesion.add(user)
-    db.sesion.commit()
+    db.session.add(user)
+    db.session.commit()
 
     token = user.generate_jwt()
 

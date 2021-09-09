@@ -5,21 +5,26 @@ and makes them available to recruiters in the form of subscription.
 ### How to start application
 1. Navigate to backend/app folder
 1. ```pip install -r requirements.txt```
-1. 
+
+1. ```Right click on the gh_robber.py file and then click "run".```
+   
+   ```or run from the terminal```
+
    On Windows: ```set FLASK_APP=gh_robber.py```
    
    On Linux: ```export FLASK_APP=gh_robber.py```
-1. ```flask db init```
-1. ```flask deploy```   
+1. ``` "flask db init" ```
+1. ``` "flask deploy" or "flask upgrade" if the data is already in the database```   
 1. ```flask run```
 
 ### How to create fake data
 1. Navigate to backend/app folder
-1. ```flask create_fake_data```
+1. ```flask db-manage add-data```
 
-There is also possibility to define desired number of fake data to be created for each table
-(default is 10).
-To do that, add ```--count NUMBER_OF_FAKE_DATA``` to upper command.
+### How to create fake data
+1. Navigate to backend/app folder
+1. ```flask db-manage remove-data```
+
 
 ## Start client side app
 
@@ -37,4 +42,4 @@ npm run dev
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://127.0.0.1:5000/](http://127.0.0.1:5000/) with your browser to see the result.

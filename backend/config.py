@@ -1,8 +1,9 @@
 import os
+
 from dotenv import load_dotenv
 from pathlib import Path
 
-# basedir = os.path.abspath(os.path.dirname(__file__))
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 basedir = Path(__file__).resolve().parent
 env_file = basedir / ".env"
@@ -10,7 +11,7 @@ load_dotenv(env_file)
 
 
 class Config:
-    DEBUG= True
+    DEBUG = True
     SECRET_KEY = os.environ.get("SECRET_KEY")
     SQLALCHEMY_TRACK_MODIFICATION = False
     SQLALCHEMY_DATABASE_URI = ""

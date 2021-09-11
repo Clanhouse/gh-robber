@@ -1,16 +1,28 @@
 import os
+from dotenv import load_dotenv
+from pathlib import Path
 
-basedir = os.path.abspath(os.path.dirname(__file__))
+# basedir = os.path.abspath(os.path.dirname(__file__))
+
+basedir = Path(__file__).resolve().parent
+env_file = basedir / ".env"
+load_dotenv(env_file)
 
 
 class Config:
+    DEBUG = True
+    SECRET_KEY = os.environ.get("SECRET_KEY")
+    SQLALCHEMY_TRACK_MODIFICATION = False
+    SQLALCHEMY_DATABASE_URI = ""
+    PER_PAGE = 5
+    JWT_EXPIRED_MINUTES = 30
+
     @staticmethod
     def init_app(app):
         pass
 
 
 class DevelopmentConfig(Config):
-    DEBUG = True
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DEV_DATABASE_URL"
@@ -18,15 +30,14 @@ class DevelopmentConfig(Config):
 
 
 class TestingConfig(Config):
-    DEBUG = True
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        "TEST_DATABASE_URL"
-    ) or "sqlite:///" + os.path.join(basedir, "data-testing.sqlite")
+    DB_FILE_PATH = basedir / "tests" / "test.db"
+    SQLALCHEMY_DATABASE_URI = f"sqlite:///{DB_FILE_PATH}"
+    DEBUG = True
+    TESTING = True
 
 
 class ProductionConfig(Config):
-    DEBUG = False
     SQLALCHEMY_COMMIT_ON_TEARDOWN = False
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DATABASE_URL"

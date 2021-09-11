@@ -1,28 +1,80 @@
 from github import Github
 from sqlalchemy.exc import IntegrityError
-import forgery_py
 from random import seed, randint, choice
 from . import db
 from app.models import GithubUserInfo, GithubUserInfoSchema
+from datetime import datetime, timedelta
+
+
+"""
+    To do:
+        add file 'GH_access_token.txt' to 'backend/app' with github access token 
+        token must be without ' and " 
+
+    search_for_repositories(
+        language  - string technology name example: python
+        time      - int    days before now to scrap
+        stars     - int    maximum stars for searching repository \
+            to stars may be used maths characters example "<=20" then must be string type  
+    )
+    
+"""
 
 with open("./app/GH_access_token.txt") as f:
-    GH_access_token = f.readlines()
+        GH_access_token = f.read().strip()    
+    
 
-
-def search_for_repositories():
+# example search_for_repositories('python', 5, '>20')
+def search_for_repositories(language=None, days=None, stars_count=None):
+    
+    g = Github(str(GH_access_token))
+    
+    time_delta = ((datetime.now() - timedelta(days=int(days))).strftime('%Y-%m-%d'))
+    
     repositories = g.search_repositories(
-        query="language:flask created:=2021-06-27 stars:>100"
+        query="language:{technology} created:<{time_delta} stars:{stars_count}".format(technology=str(language), 
+                                                                                 time_delta=time_delta, 
+                                                                                 stars_count=str(stars_count))
     )
+    
     for repo in repositories:
-        print("Repo name:", repo.name, ", Repo owner login:", repo.owner.login)
+        
         user_info = GithubUserInfo(
-            id=None,
             username=repo.owner.login,
             language=repo.language,
-            date=forgery_py.date.date(),
+            date=repo.created_at,
             stars=repo.stargazers_count,  # !!! stars of repo not user !!!
-            number_of_repositories=randint(1, 10),
+            number_of_repositories=g.get_user(repo.owner.login).public_repos,
         )
+        
+        db.session.add(user_info)
+
+    try:
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        
+
+# example searching_for_user('orzeech')
+def searching_for_user(username=None):
+    
+    g = Github(str(GH_access_token))
+    
+    repository = g.search_repositories(
+        query=("user:{username}").format(username=str(username))
+    )    
+        
+                                      
+    for repo in repository:
+        
+        user_info = GithubUserInfo(
+            username=repo.owner.login,
+            language=str(repo.language),
+            date=repo.created_at,
+            stars=repo.stargazers_count,  # !!! stars of repo not user !!!
+            number_of_repositories=g.get_user(repo.owner.login).public_repos,
+        )
+        
         db.session.add(user_info)
 
     try:

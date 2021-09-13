@@ -20,6 +20,7 @@ class GithubUserInfo(db.Model):
     __tablename__ = "github_users_info"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False)
+    repository = db.Column(db.String(70), nullable=False)
     language = db.Column(db.String(250), nullable=False)
     date = db.Column(db.Date(), nullable=False)
     stars = db.Column(db.Integer, nullable=False)
@@ -153,6 +154,7 @@ class GithubUserInfoSchema(Schema):
 
     id = fields.Integer(dump_only=True)
     username = fields.String(required=True, validate=validate.Length(max=50))
+    repository = fields.String(required=True, validate=validate.Length(max=70))
     language = fields.String(required=True, validate=validate.Length(max=250))
     date = fields.Date("%d-%m-%Y", required=True)
     stars = fields.Integer(required=True)

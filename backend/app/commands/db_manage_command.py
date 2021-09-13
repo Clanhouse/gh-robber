@@ -36,7 +36,7 @@ def add_data_from_GH_API():
 def add_single_user_from_GH_API():
     """Add sample user to database"""
     try:
-        GH_API_handling.searching_for_user('orzeech') 
+        GH_API_handling.search_for_user('orzeech') 
         db.session.commit()
         print("Data has been successfully added to database")
     except Exception as exc:

@@ -12,10 +12,14 @@ from datetime import datetime, timedelta
         token must be without ' and " 
 
     search_for_repositories(
-        language  - string technology name example: python
-        time      - int    days before now to scrap
-        stars     - int    maximum stars for searching repository \
+        language  - string  technology name example: python
+        time      - int     days before now to scrap
+        stars     - int     maximum stars for searching repository \
             to stars may be used maths characters example "<=20" then must be string type  
+    )
+    
+    search_for_user(
+        username  - string  search user by name
     )
     
 """
@@ -39,15 +43,24 @@ def search_for_repositories(language=None, days=None, stars_count=None):
     
     for repo in repositories:
         
-        user_info = GithubUserInfo(
-            username=repo.owner.login,
-            language=repo.language,
-            date=repo.created_at,
-            stars=repo.stargazers_count,  # !!! stars of repo not user !!!
-            number_of_repositories=g.get_user(repo.owner.login).public_repos,
-        )
+        found_user = GithubUserInfo.query.filter_by(username=repo.owner.login, repository=repo.name).first()
+        if found_user:
+            print("User {user}'s already exists").format(repo.owner.login)
+            
+        else:
         
-        db.session.add(user_info)
+            user_info = GithubUserInfo(
+                username=repo.owner.login,
+                repository=repo.name,
+                language=repo.language,
+                date=repo.created_at,
+                stars=repo.stargazers_count,  # !!! stars of repo not user !!!
+                number_of_repositories=g.get_user(repo.owner.login).public_repos,
+            )
+            
+            db.session.add(user_info)
+        
+        
 
     try:
         db.session.commit()
@@ -55,8 +68,8 @@ def search_for_repositories(language=None, days=None, stars_count=None):
         db.session.rollback()
         
 
-# example searching_for_user('orzeech')
-def searching_for_user(username=None):
+# example search_for_user('orzeech')
+def search_for_user(username=None):
     
     g = Github(str(GH_access_token))
     
@@ -67,15 +80,22 @@ def searching_for_user(username=None):
                                       
     for repo in repository:
         
-        user_info = GithubUserInfo(
-            username=repo.owner.login,
-            language=str(repo.language),
-            date=repo.created_at,
-            stars=repo.stargazers_count,  # !!! stars of repo not user !!!
-            number_of_repositories=g.get_user(repo.owner.login).public_repos,
-        )
-        
-        db.session.add(user_info)
+        found_user = GithubUserInfo.query.filter_by(username=repo.owner.login, repository=repo.name).first()
+        if found_user:
+            pass
+            
+        else:
+            
+            user_info = GithubUserInfo(
+                username=repo.owner.login,
+                repository=repo.name,
+                language=str(repo.language),
+                date=repo.created_at,
+                stars=repo.stargazers_count,  # !!! stars of repo not user !!!
+                number_of_repositories=g.get_user(repo.owner.login).public_repos,
+            )
+            
+            db.session.add(user_info)
 
     try:
         db.session.commit()

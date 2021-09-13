@@ -54,6 +54,7 @@ def update_user_info(args: dict, github_user_id: int):
     github_user = GithubUserInfo.query.get_or_404(github_user_id, description=f'Github user with id {github_user_id} not found')
 
     github_user.username = args['username']
+    github_user.repository = args['repository']
     github_user.language = args['language']
     github_user.date = args['date']
     github_user.stars = args['star']

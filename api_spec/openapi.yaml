@@ -1,0 +1,1053 @@
+openapi: 3.0.0
+info:
+  title: GH_ROBBER
+  contact: {}
+  version: '1.0'
+servers:
+  - url: http://127.0.0.1:5000
+    variables: {}
+paths:
+  /api/v1.0/users/users:
+    get:
+      tags:
+        - Github_user_info
+      summary: Get all users info
+      description: Get all guthub users info from database.
+      operationId: Getallusersinfo
+      parameters:
+        - name: fields
+          in: query
+          description: ''
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+            example: date,stars,username
+        - name: sort
+          in: query
+          description: ''
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+            example: stars
+        - name: stars[lt]
+          in: query
+          description: ''
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            example: 500
+        - name: stars[gte]
+          in: query
+          description: ''
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            example: 20
+        - name: username
+          in: query
+          description: ''
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+            example: li
+        - name: date[gte]
+          in: query
+          description: ''
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+            example: 10-10-2021
+        - name: limit
+          in: query
+          description: ''
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            example: 10
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Length:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: '1398'
+                  example: '1398'
+            Server:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: Werkzeug/2.0.1 Python/3.8.8
+                  example: Werkzeug/2.0.1 Python/3.8.8
+            Date:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: Thu, 14 Oct 2021 03:18:18 GMT
+                  example: Thu, 14 Oct 2021 03:18:18 GMT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Getallusersinfo'
+              example:
+                data:
+                  - date: 12-10-2021
+                    stars: 126
+                    username: melissa68
+                  - date: 12-10-2021
+                    stars: 138
+                    username: julie77
+                  - date: 11-10-2021
+                    stars: 210
+                    username: lillian68
+                  - date: 12-10-2021
+                    stars: 344
+                    username: linda92
+                  - date: 10-10-2021
+                    stars: 345
+                    username: phyllis66
+                  - date: 12-10-2021
+                    stars: 367
+                    username: elizabeth80
+                  - date: 11-10-2021
+                    stars: 375
+                    username: julie90
+                  - date: 12-10-2021
+                    stars: 385
+                    username: julia69
+                  - date: 10-10-2021
+                    stars: 436
+                    username: alice74
+                  - date: 12-10-2021
+                    stars: 444
+                    username: lisa94
+                numbers_of_records: 10
+                pagination:
+                  current_page: >-
+                    /api/v1.0/users/users?page=1&fields=date%2Cstars%2Cusername&sort=stars&stars%5Blt%5D=500&stars%5Bgte%5D=20&username=li&date%5Bgte%5D=10-10-2021&limit=10
+                  next_page: >-
+                    /api/v1.0/users/users?page=2&fields=date%2Cstars%2Cusername&sort=stars&stars%5Blt%5D=500&stars%5Bgte%5D=20&username=li&date%5Bgte%5D=10-10-2021&limit=10
+                  total_pages: 2
+                  total_records: 11
+      deprecated: false
+    post:
+      tags:
+        - Github_user_info
+      summary: Create user info
+      description: Add new user to database.
+      operationId: Createuserinfo
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateuserinfoRequest'
+            example:
+              date: 03-09-2021
+              language: Python
+              number_of_repositories: 8
+              stars: 72
+              username: test
+        required: true
+      responses:
+        '201':
+          description: CREATED
+          headers:
+            Content-Length:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: '186'
+                  example: '186'
+            Server:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: Werkzeug/2.0.1 Python/3.8.8
+                  example: Werkzeug/2.0.1 Python/3.8.8
+            Date:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: Thu, 14 Oct 2021 03:21:50 GMT
+                  example: Thu, 14 Oct 2021 03:21:50 GMT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Createuserinfo'
+              example:
+                data:
+                  date: 03-09-2021
+                  id: 1058
+                  language: Python
+                  number_of_repositories: 8
+                  stars: 72
+                  username: test
+                success: true
+      deprecated: false
+  /api/v1.0/users/users/2:
+    get:
+      tags:
+        - Github_user_info
+      summary: Get single user info
+      description: Get single user info form the database.
+      operationId: Getsingleuserinfo
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Length:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: '162'
+                  example: '162'
+            Server:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: Werkzeug/2.0.1 Python/3.8.8
+                  example: Werkzeug/2.0.1 Python/3.8.8
+            Date:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: Thu, 09 Sep 2021 02:37:45 GMT
+                  example: Thu, 09 Sep 2021 02:37:45 GMT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Getsingleuserinfo'
+              example:
+                data:
+                  date: 15-09-2021
+                  id: 2
+                  language: C++
+                  number_of_repositories: 8
+                  stars: 72
+                  username: lori87
+      deprecated: false
+    put:
+      tags:
+        - Github_user_info
+      summary: Update user info
+      description: Update guthub user info in the database
+      operationId: Updateuserinfo
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateuserinfoRequest'
+            example:
+              date: 06-09-2021
+              language: Python
+              number_of_repositories: 5
+              stars: 72
+              username: test_token
+        required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Length:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: '186'
+                  example: '186'
+            Server:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: Werkzeug/2.0.1 Python/3.8.8
+                  example: Werkzeug/2.0.1 Python/3.8.8
+            Date:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: Thu, 09 Sep 2021 07:36:47 GMT
+                  example: Thu, 09 Sep 2021 07:36:47 GMT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Updateuserinfo'
+              example:
+                data:
+                  date: 06-09-2021
+                  id: 2
+                  language: C++
+                  number_of_repositories: 5
+                  stars: 72
+                  username: test_token
+                success: true
+      deprecated: false
+  /api/v1.0/users/users/22:
+    delete:
+      tags:
+        - Github_user_info
+      summary: Delete user info
+      description: Delete single user info from database.
+      operationId: Deleteuserinfo
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Length:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: '56'
+                  example: '56'
+            Server:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: Werkzeug/2.0.1 Python/3.8.8
+                  example: Werkzeug/2.0.1 Python/3.8.8
+            Date:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: Thu, 09 Sep 2021 07:37:57 GMT
+                  example: Thu, 09 Sep 2021 07:37:57 GMT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deleteuserinfo'
+              example:
+                data: Github user with id 22 has been deleted
+      deprecated: false
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Register user
+      description: Add user to database, crerate token
+      operationId: Registeruser
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisteruserRequest'
+            example:
+              username: test
+              password: test1234
+              email: test@gmail.com
+        required: true
+      responses:
+        '201':
+          description: CREATED
+          headers:
+            Content-Length:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: '159'
+                  example: '159'
+            Server:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: Werkzeug/2.0.1 Python/3.8.8
+                  example: Werkzeug/2.0.1 Python/3.8.8
+            Date:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: Thu, 09 Sep 2021 04:09:28 GMT
+                  example: Thu, 09 Sep 2021 04:09:28 GMT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Registeruser'
+              example:
+                success: true
+                token: >-
+                  eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzExNjIzNjh9.Qt8vsmS4xAolHFSMabSeiSL-hFbXfiFmhVuNckpyXqg
+      deprecated: false
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login user
+      description: Login user to application
+      operationId: Loginuser
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginuserRequest'
+            example:
+              username: test
+              password: test1234
+        required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Length:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: '159'
+                  example: '159'
+            Server:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: Werkzeug/2.0.1 Python/3.8.8
+                  example: Werkzeug/2.0.1 Python/3.8.8
+            Date:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: Thu, 09 Sep 2021 07:19:20 GMT
+                  example: Thu, 09 Sep 2021 07:19:20 GMT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loginuser'
+              example:
+                success: true
+                token: >-
+                  eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzExNzM3NjB9.hvErG2DjiGZUWg2-hYAOJd0TM8nwzZFLNpkTnxD69jg
+      deprecated: false
+  /auth/me:
+    get:
+      tags:
+        - Auth
+      summary: Get current user
+      description: Get current user details
+      operationId: Getcurrentuser
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Length:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: '161'
+                  example: '161'
+            Server:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: Werkzeug/2.0.1 Python/3.8.8
+                  example: Werkzeug/2.0.1 Python/3.8.8
+            Date:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: Thu, 09 Sep 2021 08:27:33 GMT
+                  example: Thu, 09 Sep 2021 08:27:33 GMT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Getcurrentuser'
+              example:
+                data:
+                  creation_date: '2021-09-09T04:09:28.201109'
+                  email: test@gmail.com
+                  id: 1
+                  username: test
+                success: true
+      deprecated: false
+  /auth/update/password:
+    put:
+      tags:
+        - Auth
+      summary: Update user password
+      description: Update user password
+      operationId: Updateuserpassword
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateuserpasswordRequest'
+            example:
+              current_password: test1234
+              new_password: test1234
+        required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Length:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: '161'
+                  example: '161'
+            Server:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: Werkzeug/2.0.1 Python/3.8.8
+                  example: Werkzeug/2.0.1 Python/3.8.8
+            Date:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: Thu, 09 Sep 2021 08:33:31 GMT
+                  example: Thu, 09 Sep 2021 08:33:31 GMT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Updateuserpassword'
+              example:
+                data:
+                  creation_date: '2021-09-09T04:09:28.201109'
+                  email: test@gmail.com
+                  id: 1
+                  username: test
+                success: true
+      deprecated: false
+  /auth/update/data:
+    put:
+      tags:
+        - Auth
+      summary: Update user data
+      description: Update username and email
+      operationId: Updateuserdata
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateuserdataRequest'
+            example:
+              username: test2
+              email: test2@gmail.com
+        required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Length:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: '163'
+                  example: '163'
+            Server:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: Werkzeug/2.0.1 Python/3.8.8
+                  example: Werkzeug/2.0.1 Python/3.8.8
+            Date:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: Thu, 09 Sep 2021 08:34:21 GMT
+                  example: Thu, 09 Sep 2021 08:34:21 GMT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Updateuserdata'
+              example:
+                data:
+                  creation_date: '2021-09-09T04:09:28.201109'
+                  email: test2@gmail.com
+                  id: 1
+                  username: test2
+                success: true
+      deprecated: false
+components:
+  schemas:
+    Getallusersinfo:
+      title: Getallusersinfo
+      required:
+        - data
+        - numbers_of_records
+        - pagination
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Datum'
+          description: ''
+        numbers_of_records:
+          type: integer
+          format: int32
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      example:
+        data:
+          - date: 12-10-2021
+            stars: 126
+            username: melissa68
+          - date: 12-10-2021
+            stars: 138
+            username: julie77
+          - date: 11-10-2021
+            stars: 210
+            username: lillian68
+          - date: 12-10-2021
+            stars: 344
+            username: linda92
+          - date: 10-10-2021
+            stars: 345
+            username: phyllis66
+          - date: 12-10-2021
+            stars: 367
+            username: elizabeth80
+          - date: 11-10-2021
+            stars: 375
+            username: julie90
+          - date: 12-10-2021
+            stars: 385
+            username: julia69
+          - date: 10-10-2021
+            stars: 436
+            username: alice74
+          - date: 12-10-2021
+            stars: 444
+            username: lisa94
+        numbers_of_records: 10
+        pagination:
+          current_page: >-
+            /api/v1.0/users/users?page=1&fields=date%2Cstars%2Cusername&sort=stars&stars%5Blt%5D=500&stars%5Bgte%5D=20&username=li&date%5Bgte%5D=10-10-2021&limit=10
+          next_page: >-
+            /api/v1.0/users/users?page=2&fields=date%2Cstars%2Cusername&sort=stars&stars%5Blt%5D=500&stars%5Bgte%5D=20&username=li&date%5Bgte%5D=10-10-2021&limit=10
+          total_pages: 2
+          total_records: 11
+    Datum:
+      title: Datum
+      required:
+        - date
+        - stars
+        - username
+      type: object
+      properties:
+        date:
+          type: string
+        stars:
+          type: integer
+          format: int32
+        username:
+          type: string
+      example:
+        date: 12-10-2021
+        stars: 126
+        username: melissa68
+    Pagination:
+      title: Pagination
+      required:
+        - current_page
+        - next_page
+        - total_pages
+        - total_records
+      type: object
+      properties:
+        current_page:
+          type: string
+        next_page:
+          type: string
+        total_pages:
+          type: integer
+          format: int32
+        total_records:
+          type: integer
+          format: int32
+      example:
+        current_page: >-
+          /api/v1.0/users/users?page=1&fields=date%2Cstars%2Cusername&sort=stars&stars%5Blt%5D=500&stars%5Bgte%5D=20&username=li&date%5Bgte%5D=10-10-2021&limit=10
+        next_page: >-
+          /api/v1.0/users/users?page=2&fields=date%2Cstars%2Cusername&sort=stars&stars%5Blt%5D=500&stars%5Bgte%5D=20&username=li&date%5Bgte%5D=10-10-2021&limit=10
+        total_pages: 2
+        total_records: 11
+    CreateuserinfoRequest:
+      title: CreateuserinfoRequest
+      required:
+        - date
+        - language
+        - number_of_repositories
+        - stars
+        - username
+      type: object
+      properties:
+        date:
+          type: string
+        language:
+          type: string
+        number_of_repositories:
+          type: integer
+          format: int32
+        stars:
+          type: integer
+          format: int32
+        username:
+          type: string
+      example:
+        date: 03-09-2021
+        language: Python
+        number_of_repositories: 8
+        stars: 72
+        username: test
+    Createuserinfo:
+      title: Createuserinfo
+      required:
+        - data
+        - success
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Data'
+        success:
+          type: boolean
+      example:
+        data:
+          date: 03-09-2021
+          id: 1058
+          language: Python
+          number_of_repositories: 8
+          stars: 72
+          username: test
+        success: true
+    Data:
+      title: Data
+      required:
+        - date
+        - id
+        - language
+        - number_of_repositories
+        - stars
+        - username
+      type: object
+      properties:
+        date:
+          type: string
+        id:
+          type: integer
+          format: int32
+        language:
+          type: string
+        number_of_repositories:
+          type: integer
+          format: int32
+        stars:
+          type: integer
+          format: int32
+        username:
+          type: string
+      example:
+        date: 03-09-2021
+        id: 1058
+        language: Python
+        number_of_repositories: 8
+        stars: 72
+        username: test
+    Getsingleuserinfo:
+      title: Getsingleuserinfo
+      required:
+        - data
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Data'
+      example:
+        data:
+          date: 15-09-2021
+          id: 2
+          language: C++
+          number_of_repositories: 8
+          stars: 72
+          username: lori87
+    UpdateuserinfoRequest:
+      title: UpdateuserinfoRequest
+      required:
+        - date
+        - language
+        - number_of_repositories
+        - stars
+        - username
+      type: object
+      properties:
+        date:
+          type: string
+        language:
+          type: string
+        number_of_repositories:
+          type: integer
+          format: int32
+        stars:
+          type: integer
+          format: int32
+        username:
+          type: string
+      example:
+        date: 06-09-2021
+        language: Python
+        number_of_repositories: 5
+        stars: 72
+        username: test_token
+    Updateuserinfo:
+      title: Updateuserinfo
+      required:
+        - data
+        - success
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Data'
+        success:
+          type: boolean
+      example:
+        data:
+          date: 06-09-2021
+          id: 2
+          language: C++
+          number_of_repositories: 5
+          stars: 72
+          username: test_token
+        success: true
+    Deleteuserinfo:
+      title: Deleteuserinfo
+      required:
+        - data
+      type: object
+      properties:
+        data:
+          type: string
+      example:
+        data: Github user with id 22 has been deleted
+    RegisteruserRequest:
+      title: RegisteruserRequest
+      required:
+        - username
+        - password
+        - email
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        email:
+          type: string
+      example:
+        username: test
+        password: test1234
+        email: test@gmail.com
+    Registeruser:
+      title: Registeruser
+      required:
+        - success
+        - token
+      type: object
+      properties:
+        success:
+          type: boolean
+        token:
+          type: string
+      example:
+        success: true
+        token: >-
+          eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzExNjIzNjh9.Qt8vsmS4xAolHFSMabSeiSL-hFbXfiFmhVuNckpyXqg
+    LoginuserRequest:
+      title: LoginuserRequest
+      required:
+        - username
+        - password
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      example:
+        username: test
+        password: test1234
+    Loginuser:
+      title: Loginuser
+      required:
+        - success
+        - token
+      type: object
+      properties:
+        success:
+          type: boolean
+        token:
+          type: string
+      example:
+        success: true
+        token: >-
+          eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzExNzM3NjB9.hvErG2DjiGZUWg2-hYAOJd0TM8nwzZFLNpkTnxD69jg
+    Getcurrentuser:
+      title: Getcurrentuser
+      required:
+        - data
+        - success
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Data3'
+        success:
+          type: boolean
+      example:
+        data:
+          creation_date: '2021-09-09T04:09:28.201109'
+          email: test@gmail.com
+          id: 1
+          username: test
+        success: true
+    Data3:
+      title: Data3
+      required:
+        - creation_date
+        - email
+        - id
+        - username
+      type: object
+      properties:
+        creation_date:
+          type: string
+        email:
+          type: string
+        id:
+          type: integer
+          format: int32
+        username:
+          type: string
+      example:
+        creation_date: '2021-09-09T04:09:28.201109'
+        email: test@gmail.com
+        id: 1
+        username: test
+    UpdateuserpasswordRequest:
+      title: UpdateuserpasswordRequest
+      required:
+        - current_password
+        - new_password
+      type: object
+      properties:
+        current_password:
+          type: string
+        new_password:
+          type: string
+      example:
+        current_password: test1234
+        new_password: test1234
+    Updateuserpassword:
+      title: Updateuserpassword
+      required:
+        - data
+        - success
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Data3'
+        success:
+          type: boolean
+      example:
+        data:
+          creation_date: '2021-09-09T04:09:28.201109'
+          email: test@gmail.com
+          id: 1
+          username: test
+        success: true
+    UpdateuserdataRequest:
+      title: UpdateuserdataRequest
+      required:
+        - username
+        - email
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+      example:
+        username: test2
+        email: test2@gmail.com
+    Updateuserdata:
+      title: Updateuserdata
+      required:
+        - data
+        - success
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Data3'
+        success:
+          type: boolean
+      example:
+        data:
+          creation_date: '2021-09-09T04:09:28.201109'
+          email: test2@gmail.com
+          id: 1
+          username: test2
+        success: true
+  securitySchemes:
+    httpBearer:
+      type: http
+      scheme: bearer
+security:
+  - httpBearer: []
+tags:
+  - name: Github_user_info
+  - name: Auth

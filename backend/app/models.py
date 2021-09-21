@@ -53,16 +53,20 @@ class GithubUserInfo(db.Model):
                     query = query.order_by(column_attr.desc()) if desc else query.order_by(column_attr)
         return query
 
+    # @staticmethod
+    # def get_filter_argument(column_name: InstrumentedAttribute, value: str, operator: str) -> BinaryExpression:
+    #     operator_mapping = {
+    #         "==": column_name == value,
+    #         "gte": column_name >= value,
+    #         "gt": column_name > value,
+    #         "lte": column_name <= value,
+    #         "lt": column_name < value
+    #     }
+    #     return operator_mapping[operator]
+
     @staticmethod
-    def get_filter_argument(column_name: InstrumentedAttribute, value: str, operator: str) -> BinaryExpression:
-        operator_mapping = {
-            "==": column_name == value,
-            "gte": column_name >= value,
-            "gt": column_name > value,
-            "lte": column_name <= value,
-            "lt": column_name < value
-        }
-        return operator_mapping[operator]
+    def get_filter_argument():
+        pass
 
     @staticmethod
     def apply_filter(query: BaseQuery) -> BaseQuery:

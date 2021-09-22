@@ -10,7 +10,6 @@ from sqlalchemy.sql.expression import BinaryExpression
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from . import db
-from config import Config
 
 
 COMPARISON_OPERATOR_RE = re.compile(r"(.*)\[(gte|gt|lte|lt)\]")
@@ -66,7 +65,13 @@ class GithubUserInfo(db.Model):
 
     @staticmethod
     def get_filter_argument():
-        pass
+        query = GithubUserInfo.query
+        # if username:
+        #     query = query.filter(GithubUserInfo.username == 'username')
+        query = query.filter(GithubUserInfo.username == 'username')
+
+        result = query.all()
+        return result
 
     @staticmethod
     def apply_filter(query: BaseQuery) -> BaseQuery:

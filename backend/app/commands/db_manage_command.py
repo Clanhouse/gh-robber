@@ -13,7 +13,7 @@ def db_manage():
 def add_data():
     """Add sample data to database"""
     try:
-        create_fake_info()
+        create_fake_info(count=10)
         db.session.commit()
         print("Data has been successfully added to database")
     except Exception as exc:

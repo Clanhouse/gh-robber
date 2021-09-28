@@ -9,11 +9,12 @@ import {
   LangSearchByUserView,
 } from "../../i18n/ENG";
 import reducer from "./Search.reducer";
+import getConfig from "../../utils/getConfig";
 
 const Search = () => {
   const [state, dispatch] = useReducer(reducer, {});
 
-  const url = process.env.REACT_APP_URL_USERS_REQUEST_users as string;
+  const url = getConfig("process.env.REACT_APP_URL_USERS_REQUEST_users");
 
   const { searchBy, toggleSwitchLabelFirst, toggleSwitchLabelSecond, submitButton } =
     LangSearch;

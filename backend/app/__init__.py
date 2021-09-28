@@ -10,7 +10,7 @@ migrate = Migrate()
 
 def create_app(config_name="development"):
     app = Flask(__name__)
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config.from_object(config[config_name])
 
     db.init_app(app)
@@ -20,6 +20,7 @@ def create_app(config_name="development"):
     from app.errors import errors_bp
     from app.api.ver_1_0 import users_api
     from app.auth import auth_bp
+
     app.register_blueprint(db_manage_bp)
     app.register_blueprint(errors_bp)
     app.register_blueprint(users_api)

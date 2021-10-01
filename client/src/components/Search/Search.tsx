@@ -14,7 +14,7 @@ import getConfig from "../../utils/getConfig";
 const Search = () => {
   const [state, dispatch] = useReducer(reducer, {});
 
-  const url = getConfig("process.env.REACT_APP_URL_USERS_REQUEST_users");
+  const url = getConfig("REACT_APP_URL_USERS_REQUEST_users");
 
   const { searchBy, toggleSwitchLabelFirst, toggleSwitchLabelSecond, submitButton } =
     LangSearch;

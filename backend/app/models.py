@@ -13,6 +13,8 @@ from marshmallow import validate
 from marshmallow import validates
 from marshmallow import ValidationError
 from sqlalchemy import or_
+from sqlalchemy import and_
+from sqlalchemy import not_
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.sql.expression import BinaryExpression
 from werkzeug.security import generate_password_hash
@@ -85,9 +87,36 @@ class GithubUserInfo(db.Model):
     def apply_filter(query: BaseQuery) -> BaseQuery:
         for param, value in request.args.items():
             if param not in {"fields", "sort", "page", "limit"}:
-                if param == "username":
-                    query = query.filter(GithubUserInfo.username.like(f"%{value}%"))
-                    return query
+
+                operator = "=="
+                match = COMPARISON_OPERATOR_RE.match(param)
+                if match is not None:
+                    param, operator = match.groups()
+                column_attr = getattr(GithubUserInfo, param, None)
+                if column_attr is not None:
+
+                    if param == "username":
+                        query = query.filter(GithubUserInfo.username.like(f"%{value}%"))
+                        continue
+                    if param == 'language':
+                        query = query.filter(GithubUserInfo.language.like(f"%{value}%"))
+                        continue
+                    if param == 'number_of_repositories':
+                        query = query.filter(GithubUserInfo.number_of_repositories.like(f"%{value}%"))
+                        continue
+                    if param == 'date':
+                        try:
+                            value = datetime.strftime(value, "%d-%m-%Y").date()
+                            query = query.filter(GithubUserInfo.date.like(f"%{value}%"))
+                            continue
+                        except ValueError:
+                            continue
+                    if param == 'stars':
+                        query = query.filter(GithubUserInfo.stars == value)
+                        continue
+
+                return query.all()
+
                 operator = "=="
                 match = COMPARISON_OPERATOR_RE.match(param)
                 if match is not None:
@@ -103,14 +132,13 @@ class GithubUserInfo(db.Model):
                         column_attr, value, operator
                     )
                     query = query.filter(filter_argument)
+
         return query
 
     @staticmethod
     def get_pagination(query: BaseQuery) -> Tuple[list, dict]:
         page = request.args.get("page", 1, type=int)
-        limit = request.args.get(
-            "limit", current_app.config.get("PER_PAGE", 5), type=int
-        )
+        limit = request.args.get("limit", current_app.config.get("PER_PAGE", 5), type=int)
         params = {k: v for k, v in request.args.items() if k != "page"}
         paginate_object = query.paginate(page, limit, False)
         pagination = {

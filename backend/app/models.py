@@ -98,21 +98,29 @@ class GithubUserInfo(db.Model):
                     if param == "username":
                         query = query.filter(GithubUserInfo.username.like(f"%{value}%"))
                         continue
-                    if param == 'language':
+                    if param == "language":
                         query = query.filter(GithubUserInfo.language.like(f"%{value}%"))
                         continue
-                    if param == 'number_of_repositories':
-                        query = query.filter(GithubUserInfo.number_of_repositories.like(f"%{value}%"))
+                    if param == "number_of_repositories":
+                        query = query.filter(
+                            GithubUserInfo.number_of_repositories.like(f"%{value}%")
+                        )
                         continue
-                    if param == 'date':
+                    if param == "date":
                         try:
                             value = datetime.strftime(value, "%d-%m-%Y").date()
                             query = query.filter(GithubUserInfo.date.like(f"%{value}%"))
                             continue
                         except ValueError:
                             continue
-                    if param == 'stars':
+                    if param == "stars":
                         query = query.filter(GithubUserInfo.stars == value)
+                        continue
+                    if param == "stars_greater_than":
+                        query = query.filter(GithubUserInfo.stars > value)
+                        continue
+                    if param == "stars_lower_than":
+                        query = query.filter(GithubUserInfo.stars < value)
                         continue
 
                 return query.all()
@@ -138,7 +146,9 @@ class GithubUserInfo(db.Model):
     @staticmethod
     def get_pagination(query: BaseQuery) -> Tuple[list, dict]:
         page = request.args.get("page", 1, type=int)
-        limit = request.args.get("limit", current_app.config.get("PER_PAGE", 5), type=int)
+        limit = request.args.get(
+            "limit", current_app.config.get("PER_PAGE", 5), type=int
+        )
         params = {k: v for k, v in request.args.items() if k != "page"}
         paginate_object = query.paginate(page, limit, False)
         pagination = {

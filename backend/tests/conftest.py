@@ -29,13 +29,13 @@ def user(client):
         'password': '123456',
         'email': 'test@gmail.com'
     }
-    client.post('/api/v1/auth/register', json=user)
+    client.post('/auth/register', json=user)
     return user
 
 
 @pytest.fixture
 def token(client, user):
-    response = client.post('/api/v1/auth/login', json={
+    response = client.post('/auth/login', json={
         'username': user['username'],
         'password': user['password']
     })

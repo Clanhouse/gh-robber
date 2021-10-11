@@ -2,7 +2,7 @@ import pytest
 
 
 def test_registration(client):
-    response = client.post('/api/v1/auth/register',
+    response = client.post('/auth/register',
                            json={
                                'username': 'test',
                                'password': '123456',
@@ -24,7 +24,7 @@ def test_registration(client):
     ]
 )
 def test_registration_invalid_data(client, data, missing_field):
-    response = client.post('/api/v1/auth/register',
+    response = client.post('/auth/register',
                            json=data)
     response_data = response.get_json()
     assert response.status_code == 404
@@ -36,7 +36,7 @@ def test_registration_invalid_data(client, data, missing_field):
 
 
 def test_registration_invalid_content_type(client):
-    response = client.post('/api/v1/auth/register',
+    response = client.post('/auth/register',
                            data={
                                'username': 'test',
                                'password': '123456',
@@ -50,7 +50,7 @@ def test_registration_invalid_content_type(client):
 
 
 def test_registration_already_used_username(client, user):
-    response = client.post('/api/v1/auth/register',
+    response = client.post('/auth/register',
                            json={
                                'username': user['username'],
                                'password': '123456',
@@ -64,7 +64,7 @@ def test_registration_already_used_username(client, user):
 
 
 def test_registration_already_used_email(client, user):
-    response = client.post('/api/v1/auth/register',
+    response = client.post('/auth/register',
                            json={
                                'username': 'new_user',
                                'password': '123456',
@@ -78,7 +78,7 @@ def test_registration_already_used_email(client, user):
 
 
 def test_get_current_user(client, user, token):
-    response = client.get('/api/v1/auth/me',
+    response = client.get('/auth/me',
                            headers={
                                'Authorization': f'Bearer {token}'
                            })
@@ -93,7 +93,7 @@ def test_get_current_user(client, user, token):
 
 
 def test_get_current_user_missing_token(client):
-    response = client.get('/api/v1/auth/me')
+    response = client.get('/auth/me')
     response_data = response.get_json()
     assert response.status_code == 404
     assert response.headers['Content-Type'] == 'application/json'

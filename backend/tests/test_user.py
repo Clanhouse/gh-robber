@@ -29,12 +29,6 @@ def test_get_users_info(client, sample_data):
         "current_page": "/api/v1.0/users/users?page=1",
         "next_page": "/api/v1.0/users/users?page=2"
     }
-    assert response_data == "abc"
-    assert len(response_data['data']) == 10
-
-
-
-
 
 # def test_get_users_info_with_params(client, sample_data):
 #     response = client.get("/api/v1.0/users/users?fields=username&sort=-id&page=2&limit=2")
@@ -123,7 +117,7 @@ def test_create_github_user(client, token, github_user_info):
     ]
 )
 def test_create_github_user_info_invalid_data(client, token,  data, missing_field):
-    response = client.post("/api/v1/users/users",
+    response = client.post("/api/v1.0/users/users",
                                 json=data,
                                 headers={
                                         "Authorization": f"Bearer {token}"
@@ -137,7 +131,7 @@ def test_create_github_user_info_invalid_data(client, token,  data, missing_fiel
 
 
 def test_create_github_user_info_invalid_content_type(client, token, github_user_info):
-    response = client.post("/api/v1/users/users",
+    response = client.post("/api/v1.0/users/users",
                            data=github_user_info,
                            headers={
                                "Authorization": f"Bearer {token}"
@@ -149,7 +143,7 @@ def test_create_github_user_info_invalid_content_type(client, token, github_user
 
 
 def test_create_github_user_info_missing_token(client, github_user_info):
-    response = client.post("/api/v1/users/users",
+    response = client.post("/api/v1.0/users/users",
                            json=github_user_info)
     response_data = response.get_json()
     assert response.headers["Content-Type"] == "application/json"

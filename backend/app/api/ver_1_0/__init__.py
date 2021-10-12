@@ -8,5 +8,5 @@ api.register_blueprint(admin_api)
 
 from . import (
     users,
-    admin
+    admin,
 )  # Blueprints needs to be created before assigning api endpoint to them.

@@ -12,15 +12,25 @@ from app.utils import validate_json_content_type, token_required
 @use_args(user_schema, error_status_code=400)
 def register(args: dict):
     if User.query.filter(User.username == args["username"]).first():
-        abort(jsonify({
-            'success': False,
-            'description': f"User with username {args['username']} already exists"
-        }), 409)
+        abort(
+            jsonify(
+                {
+                    "success": False,
+                    "description": f"User with username {args['username']} already exists",
+                }
+            ),
+            409,
+        )
     if User.query.filter(User.email == args["email"]).first():
-        abort(jsonify({
-            'success': False,
-            'description': f"User with email {args['email']} already exists"
-        }), 409)
+        abort(
+            jsonify(
+                {
+                    "success": False,
+                    "description": f"User with email {args['email']} already exists",
+                }
+            ),
+            409,
+        )
 
     args["password"] = User.generate_hashed_password(args["password"])
     user = User(**args)
@@ -30,13 +40,10 @@ def register(args: dict):
 
     token = user.generate_jwt()
 
-    return jsonify({
-        "success": True,
-        "token": token
-    }), 201
+    return jsonify({"success": True, "token": token}), 201
 
 
-@auth_bp.route('/login', methods=['POST'])
+@auth_bp.route("/login", methods=["POST"])
 @validate_json_content_type
 @use_args(UserSchema(only=["username", "password"]), error_status_code=400)
 def login(args: dict):
@@ -48,59 +55,53 @@ def login(args: dict):
 
     token = user.generate_jwt()
 
-    return jsonify({
-        "success": True,
-        "token": token
-    })
+    return jsonify({"success": True, "token": token})
 
 
-@auth_bp.route('/me', methods=['GET'])
+@auth_bp.route("/me", methods=["GET"])
 @token_required
 def get_current_user(user_id: int):
-    user = User.query.get_or_404(user_id, description=f'User with id {user_id} not found')
+    user = User.query.get_or_404(
+        user_id, description=f"User with id {user_id} not found"
+    )
 
-    return jsonify({
-        'success': True,
-        'data': user_schema.dump(user)
-    })
+    return jsonify({"success": True, "data": user_schema.dump(user)})
 
 
-@auth_bp.route('/update/password', methods=['PUT'])
+@auth_bp.route("/update/password", methods=["PUT"])
 @token_required
 @validate_json_content_type
 @use_args(user_password_update_schema, error_status_code=400)
 def update_user_password(user_id: int, args: dict):
-    user = User.query.get_or_404(user_id, description=f'User with id {user_id} not found')
+    user = User.query.get_or_404(
+        user_id, description=f"User with id {user_id} not found"
+    )
 
-    if not user.is_password_valid(args['current_password']):
-        abort(401, description='Invalid password')
+    if not user.is_password_valid(args["current_password"]):
+        abort(401, description="Invalid password")
 
-    user.password = user.generate_hashed_password(args['new_password'])
+    user.password = user.generate_hashed_password(args["new_password"])
     db.session.commit()
 
-    return jsonify({
-        'success': True,
-        'data': user_schema.dump(user)
-    })
+    return jsonify({"success": True, "data": user_schema.dump(user)})
 
 
-@auth_bp.route('/update/data', methods=['PUT'])
+@auth_bp.route("/update/data", methods=["PUT"])
 @token_required
 @validate_json_content_type
-@use_args(UserSchema(only=['username', 'email']), error_status_code=400)
+@use_args(UserSchema(only=["username", "email"]), error_status_code=400)
 def update_user_data(user_id: int, args: dict):
-    if User.query.filter(User.username == args['username']).first():
+    if User.query.filter(User.username == args["username"]).first():
         abort(409, description=f'User with username {args["username"]} already exists')
-    if User.query.filter(User.email == args['email']).first():
+    if User.query.filter(User.email == args["email"]).first():
         abort(409, description=f'User with email {args["email"]} already exists')
 
-    user = User.query.get_or_404(user_id, description=f'User with id {user_id} not found')
+    user = User.query.get_or_404(
+        user_id, description=f"User with id {user_id} not found"
+    )
 
-    user.username = args['username']
-    user.email = args['email']
+    user.username = args["username"]
+    user.email = args["email"]
     db.session.commit()
 
-    return jsonify({
-        'success': True,
-        'data': user_schema.dump(user)
-    })
+    return jsonify({"success": True, "data": user_schema.dump(user)})

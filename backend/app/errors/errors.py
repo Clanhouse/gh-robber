@@ -6,10 +6,7 @@ from app.errors import errors_bp
 
 class ErrorResponse:
     def __init__(self, message: str, http_status: int):
-        self.payload = {
-            'success': False,
-            'message': message
-        }
+        self.payload = {"success": False, "message": message}
         self.http_status = http_status
 
     def to_response(self) -> Response:
@@ -20,7 +17,7 @@ class ErrorResponse:
 
 @errors_bp.app_errorhandler(400)
 def bad_request_error(err):
-    messages = err.data.get('messages', {}).get('json', {})
+    messages = err.data.get("messages", {}).get("json", {})
     return ErrorResponse(messages, 400).to_response()
 
 

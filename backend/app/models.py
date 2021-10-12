@@ -3,6 +3,8 @@ import jwt
 from typing import Tuple
 from datetime import datetime
 from datetime import timedelta
+
+import sqlalchemy.orm
 from flask import request
 from flask import url_for
 from flask import current_app
@@ -20,9 +22,6 @@ from sqlalchemy.sql.expression import BinaryExpression
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 from . import db
-
-
-COMPARISON_OPERATOR_RE = re.compile(r"(.*)\[(gte|gt|lte|lt)\]")
 
 
 class GithubUserInfo(db.Model):
@@ -71,75 +70,43 @@ class GithubUserInfo(db.Model):
         return query
 
     @staticmethod
-    def get_filter_argument(
-        column_name: InstrumentedAttribute, value: str, operator: str
-    ) -> BinaryExpression:
-        operator_mapping = {
-            "==": column_name == value,
-            "gte": column_name >= value,
-            "gt": column_name > value,
-            "lte": column_name <= value,
-            "lt": column_name < value,
-        }
-        return operator_mapping[operator]
-
-    @staticmethod
     def apply_filter(query: BaseQuery) -> BaseQuery:
         for param, value in request.args.items():
             if param not in {"fields", "sort", "page", "limit"}:
-
-                operator = "=="
-                match = COMPARISON_OPERATOR_RE.match(param)
-                if match is not None:
-                    param, operator = match.groups()
-                column_attr = getattr(GithubUserInfo, param, None)
-                if column_attr is not None:
-
-                    if param == "username":
-                        query = query.filter(GithubUserInfo.username.like(f"%{value}%"))
+                if param == "username":
+                    query = query.filter(GithubUserInfo.username.like(f"%{value}%"))
+                    continue
+                if param == "language":
+                    query = query.filter(GithubUserInfo.language.like(f"%{value}%"))
+                    continue
+                if param == "number_of_repositories":
+                    query = query.filter(
+                        GithubUserInfo.number_of_repositories.like(f"%{value}%"))
+                    continue
+                if param == "date":
+                    try:
+                        value = datetime.strftime(value, "%d-%m-%Y").date()
+                        query = query.filter(GithubUserInfo.date.like(f"%{value}%"))
                         continue
-                    if param == "language":
-                        query = query.filter(GithubUserInfo.language.like(f"%{value}%"))
+                    except ValueError:
                         continue
-                    if param == "number_of_repositories":
-                        query = query.filter(
-                            GithubUserInfo.number_of_repositories.like(f"%{value}%")
-                        )
-                        continue
-                    if param == "date":
-                        try:
-                            value = datetime.strftime(value, "%d-%m-%Y").date()
-                            query = query.filter(GithubUserInfo.date.like(f"%{value}%"))
-                            continue
-                        except ValueError:
-                            continue
-                    if param == "stars":
-                        query = query.filter(GithubUserInfo.stars == value)
-                        continue
-                    if param == "stars_greater_than":
+                if param.startswith('stars'):
+                    if param.endswith('[gt]'):
                         query = query.filter(GithubUserInfo.stars > value)
                         continue
-                    if param == "stars_lower_than":
+                    elif param.endswith('[gte]'):
+                        query = query.filter(GithubUserInfo.stars >= value)
+                        continue
+                    elif param.endswith('[lt]'):
                         query = query.filter(GithubUserInfo.stars < value)
                         continue
-
+                    elif param.endswith('[lte]'):
+                        query = query.filter(GithubUserInfo.stars <= value)
+                        continue
+                    else:
+                        query = query.filter(GithubUserInfo.stars == value)
+                        continue
                 return query.all()
-
-                operator = "=="
-                match = COMPARISON_OPERATOR_RE.match(param)
-                if match is not None:
-                    param, operator = match.groups()
-                column_attr = getattr(GithubUserInfo, param, None)
-                if column_attr is not None:
-                    if param == "date":
-                        try:
-                            value = datetime.strftime(value, "%d-%m-%Y").date()
-                        except ValueError:
-                            continue
-                    filter_argument = GithubUserInfo.get_filter_argument(
-                        column_attr, value, operator
-                    )
-                    query = query.filter(filter_argument)
 
         return query
 

@@ -17,19 +17,20 @@ def test_get_users_info_no_records(client):
     assert response.get_json() == expected_result
 
 
-# def test_get_users_info(client, sample_data):
-#     response = client.get("/api/v1.0/users/users")
-#     response_data = response.get_json()
-#     assert response.status_code == 200
-#     assert response.headers["Content-Type"] == 'application/json'
-#     assert response_data["numbers_of_records"] == 5
-#     assert response_data["pagination"] == {
-#         "total_pages": 2,
-#         "total_records": 10,
-#         "current_page": "/api/v1.0/users/users?page=1",
-#         "next_page": "/api/v1.0/users/users?page=2"
-#     }
-#     assert len(response_data["data"]) == 10
+def test_get_users_info(client, sample_data):
+    response = client.get("/api/v1.0/users/users")
+    response_data = response.get_json()
+    assert response.status_code == 200
+    assert response.headers["Content-Type"] == 'application/json'
+    assert response_data["numbers_of_records"] == 5
+    assert response_data["pagination"] == {
+        "total_pages": 2,
+        "total_records": 10,
+        "current_page": "/api/v1.0/users/users?page=1",
+        "next_page": "/api/v1.0/users/users?page=2"
+    }
+    assert response_data == "abc"
+    assert len(response_data['data']) == 10
 
 
 
@@ -86,18 +87,26 @@ def test_create_github_user(client, token, github_user_info):
                                 })
     response_data = response.get_json()
     expected_result = {
-
+        'success': True,
         "data": {
             **github_user_info,
             "id": 1
-        },
-    'success': True}
+        }
+    }
+
     assert response.status_code == 201
     assert response.headers["Content-Type"] == "application/json"
     assert response_data == expected_result
 
     response = client.get("/api/v1.0/users/users/1")
     response_data = response.get_json()
+    expected_result = {
+        'success': True,
+        "data": {
+            **github_user_info,
+            "id": 1
+        }
+    }
     assert response.status_code == 200
     assert response.headers["Content-Type"] == "application/json"
     assert response_data == expected_result

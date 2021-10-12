@@ -83,10 +83,24 @@ class GithubUserInfo(db.Model):
                     query = query.filter(
                         GithubUserInfo.number_of_repositories.like(f"%{value}%"))
                     continue
-                if param == "date":
+                if param.startswith("date"):
                     try:
-                        value = datetime.strftime(value, "%d-%m-%Y").date()
-                        query = query.filter(GithubUserInfo.date.like(f"%{value}%"))
+                        value = datetime.strptime(value, '%d-%m-%Y').date()
+                        if param.endswith('[gt]'):
+                            query = query.filter(GithubUserInfo.date > value)
+                            continue
+                        elif param.endswith('[gte]'):
+                            query = query.filter(GithubUserInfo.date >= value)
+                            continue
+                        elif param.endswith('[lt]'):
+                            query = query.filter(GithubUserInfo.date < value)
+                            continue
+                        elif param.endswith('[lte]'):
+                            query = query.filter(GithubUserInfo.date >= value)
+                            continue
+                        else:
+                            query = query.filter(GithubUserInfo.date == value)
+                            continue
                         continue
                     except ValueError:
                         continue

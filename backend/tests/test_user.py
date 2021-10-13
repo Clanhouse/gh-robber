@@ -31,27 +31,22 @@ def test_get_users_info(client, sample_data):
     }
 
 
-# def test_get_users_info_with_params(client, sample_data):
-#     response = client.get("/api/v1.0/users/users?fields=username&sort=-id&page=2&limit=2")
-#     response_data = response.get_json()
-#     assert response.status_code == 200
-#     assert response.headers["Content-Type"] == 'application/json'
-#     assert response_data["number_of_records"] == 2
-#     assert response_data["pagination"] == {
-#         "total_pages": 5,
-#         "total_records": 10,
-#         "current_page": "/api/v1.0/users/users?page=2&fields=username&sort=-id&page=2&limit=2",
-#         "next_page": "/api/v1.0/users/users?page=3&fields=username&sort=-id&page=2&limit=2",
-#         "previous_page": "/api/v1.0/users/users?page=1&fields=username&sort=-id&page=2&limit=2"
-#     }
-#     assert response_data["data"] == [
-#         {
-#             "username": "username"
-#         },
-#         {
-#             "username": "username"
-#         }
-#     ]
+def test_get_users_info_with_params(client, sample_data):
+    response = client.get("/api/v1.0/users/users?fields=username&sort=-id&page=2&limit=2")
+    response_data = response.get_json()
+    assert response.status_code == 200
+    assert response.headers["Content-Type"] == 'application/json'
+    assert response_data["numbers_of_records"] == 2
+    assert response_data["pagination"] == {
+        "total_pages": 5,
+        "total_records": 10,
+        "current_page": "/api/v1.0/users/users?page=2&fields=username&sort=-id&limit=2",
+        "next_page": "/api/v1.0/users/users?page=3&fields=username&sort=-id&limit=2",
+        "previous_page": "/api/v1.0/users/users?page=1&fields=username&sort=-id&limit=2"
+    }
+    assert len(response_data["data"]) == 2
+    assert response_data["data"][0]["username"] is not None
+    assert isinstance(response_data["data"][0]["username"], str)
 
 
 def test_single_github_user_info(client, sample_data):

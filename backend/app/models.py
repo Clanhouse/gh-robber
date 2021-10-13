@@ -3,7 +3,6 @@ import jwt
 from typing import Tuple
 from datetime import datetime
 from datetime import timedelta
-
 import sqlalchemy.orm
 from flask import request
 from flask import url_for
@@ -79,10 +78,22 @@ class GithubUserInfo(db.Model):
                 if param == "language":
                     query = query.filter(GithubUserInfo.language.like(f"%{value}%"))
                     continue
-                if param == "number_of_repositories":
-                    query = query.filter(
-                        GithubUserInfo.number_of_repositories.like(f"%{value}%"))
-                    continue
+                if param.startswith('number_of_repositories'):
+                    if param.endswith('[gt]'):
+                        query = query.filter(GithubUserInfo.number_of_repositories > value)
+                        continue
+                    elif param.endswith('[gte]'):
+                        query = query.filter(GithubUserInfo.number_of_repositories >= value)
+                        continue
+                    elif param.endswith('[lt]'):
+                        query = query.filter(GithubUserInfo.number_of_repositories < value)
+                        continue
+                    elif param.endswith('[lte]'):
+                        query = query.filter(GithubUserInfo.number_of_repositories <= value)
+                        continue
+                    else:
+                        query = query.filter(GithubUserInfo.number_of_repositories == value)
+                        continue
                 if param.startswith("date"):
                     try:
                         value = datetime.strptime(value, '%d-%m-%Y').date()
@@ -96,7 +107,7 @@ class GithubUserInfo(db.Model):
                             query = query.filter(GithubUserInfo.date < value)
                             continue
                         elif param.endswith('[lte]'):
-                            query = query.filter(GithubUserInfo.date >= value)
+                            query = query.filter(GithubUserInfo.date <= value)
                             continue
                         else:
                             query = query.filter(GithubUserInfo.date == value)

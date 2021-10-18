@@ -25,10 +25,15 @@ and makes them available to recruiters in the form of subscription.
 1. Navigate to backend/app folder
 1. `flask db-manage add-data`
 
-### How to create fake data
+### How to remove fake data
 
 1. Navigate to backend/app folder
 1. `flask db-manage remove-data`
+
+### How to run tests
+
+To execute the tests located in the tests/ folder, navigate to the backend folder and run the command:
+`python -m pytest tests/`
 
 ## Start client side app
 

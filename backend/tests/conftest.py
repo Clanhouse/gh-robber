@@ -37,7 +37,6 @@ def token(client, user):
     return response.get_json()["token"]
 
 
-
 @pytest.fixture
 def sample_data(app):
     runner = app.test_cli_runner()
@@ -51,6 +50,6 @@ def github_user_info():
         "language": "language",
         "date": "10-10-2000",
         "stars": 10,
-        "number_of_repositories": 30
+        "number_of_repositories": 30,
     }
 

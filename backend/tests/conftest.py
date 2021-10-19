@@ -24,22 +24,18 @@ def client(app):
 
 @pytest.fixture
 def user(client):
-    user = {
-        'username': 'test',
-        'password': '123456',
-        'email': 'test@gmail.com'
-    }
-    client.post('/auth/register', json=user)
+    user = {"username": "test", "password": "123456", "email": "test@gmail.com"}
+    client.post("/auth/register", json=user)
     return user
 
 
 @pytest.fixture
 def token(client, user):
-    response = client.post('/auth/login', json={
-        'username': user['username'],
-        'password': user['password']
-    })
-    return response.get_json()['token']
+    response = client.post(
+        "/auth/login", json={"username": user["username"], "password": user["password"]}
+    )
+    return response.get_json()["token"]
+
 
 
 @pytest.fixture

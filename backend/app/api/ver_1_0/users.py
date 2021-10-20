@@ -1,9 +1,14 @@
-from flask import jsonify, request, make_response
-from webargs.flaskparser import use_args
 from app import db
+from flask import jsonify
+from flask import request
+from flask import make_response
+from webargs.flaskparser import use_args
 from app.api.ver_1_0 import users_api
-from app.models import GithubUserInfo, GithubUserInfoSchema, info_schema
-from app.utils import validate_json_content_type, token_required
+from app.models import GithubUserInfo
+from app.models import GithubUserInfoSchema
+from app.models import info_schema
+from app.utils import token_required
+from app.utils import validate_json_content_type
 
 
 @users_api.route("/users", methods=["GET"])

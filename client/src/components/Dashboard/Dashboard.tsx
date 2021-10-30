@@ -1,9 +1,8 @@
 import { FunctionComponent } from "react";
 import { Redirect, Route, useRouteMatch } from "react-router-dom";
-
 import { Container } from "./Dashboard.styles";
 import Menu from "../Menu/Menu";
-import { dashboardRoutes } from "../../Router/Routes";
+import { dashboardRoutes } from "../../router/routes";
 import useAuthUserContext from "../../context/Auth/useAuthUserContext";
 
 const Dashboard: FunctionComponent = () => {
@@ -15,7 +14,7 @@ const Dashboard: FunctionComponent = () => {
   console.log("context dashboard", user);
 
   if (!user) {
-    return <Redirect to="/" />;
+    return <Redirect to="/login" />;
   }
 
   return (

@@ -36,8 +36,9 @@ export const useLoginGoogle = () => {
       userEmail: email,
       userID: googleId,
       userName: name,
-      accessToken: accessToken,
+      accessToken,
     });
+
     history.push("/dashboard");
   };
 
@@ -56,7 +57,6 @@ export const useLoginGoogle = () => {
           onSuccess={onSuccess}
           onFailure={onFailure}
           onRequest={() => setError(null)}
-          isSignedIn={true}
         />
       </>
     );

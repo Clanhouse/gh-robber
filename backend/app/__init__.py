@@ -39,8 +39,8 @@ def create_app(config_name="development"):
     app = Flask(__name__)
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config.from_object(config[config_name])
-    # cors = CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
-    # app.config['CORS_HEADERS'] = 'Content-Type'
+    cors = CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
+    app.config['CORS_HEADERS'] = 'Content-Type'
 
     db.init_app(app)
     migrate.init_app(app, db)

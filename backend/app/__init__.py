@@ -3,6 +3,32 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from config import config
 
+from flask_limiter import Limiter
+from flask_login import LoginManager, current_user
+from flask_redis import FlaskRedis
+from flask_socketio import SocketIO
+import base64
+import hmac
+import time
+import logging
+
+try:
+    from flask_cors import CORS  # The typical way to import flask-cors
+except ImportError:
+    # Path hack allows examples to be run without installation.
+    import os
+    parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    os.sys.path.insert(0, parentdir)
+
+    from flask_cors import CORS
+
+socketio = SocketIO(cors_allowed_origins='*')
+limiter = Limiter(key_func=lambda: current_user.id)
+login_manager = LoginManager()
+# mysql = Database(autocommit=True)
+redis = FlaskRedis()
+cors = CORS()
+
 
 db = SQLAlchemy()
 migrate = Migrate()

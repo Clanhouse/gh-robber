@@ -29,6 +29,8 @@ login_manager = LoginManager()
 redis = FlaskRedis()
 cors = CORS()
 
+
+
 db = SQLAlchemy()
 migrate = Migrate()
 

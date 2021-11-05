@@ -31,10 +31,11 @@ def create_fake_info(count=10):
         fake_info = GithubUserInfo(
             id=None,
             username=forgery_py.internet.user_name(True),
-            language=choice(LANGUAGE_LIST),
+            languages=[choice(LANGUAGE_LIST)],
             date=forgery_py.date.date(),
-            stars=randint(1, 1000),
-            number_of_repositories=randint(1, 100),
+            stars=randint(1, 100),
+            number_of_repositories=randint(1, 10),
+            repository=str(randint(1, 100)).join("repo")
         )
         db.session.add(fake_info)
     try:

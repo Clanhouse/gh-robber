@@ -1,8 +1,8 @@
-"""github_users_info
+"""empty message
 
-Revision ID: 215b9b7461e0
-Revises: 264d149cf396
-Create Date: 2021-08-27 07:29:52.706701
+Revision ID: 833661611a36
+Revises: cc980ab598fe
+Create Date: 2021-10-18 08:46:49.540912
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '215b9b7461e0'
-down_revision = '264d149cf396'
+revision = '833661611a36'
+down_revision = 'cc980ab598fe'
 branch_labels = None
 depends_on = None
 
@@ -21,7 +21,8 @@ def upgrade():
     op.create_table('github_users_info',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(length=50), nullable=False),
-    sa.Column('language', sa.String(length=250), nullable=False),
+    sa.Column('repository', sa.String(length=70), nullable=False),
+    sa.Column('languages', sa.JSON(), nullable=False),
     sa.Column('date', sa.Date(), nullable=False),
     sa.Column('stars', sa.Integer(), nullable=False),
     sa.Column('number_of_repositories', sa.Integer(), nullable=False),

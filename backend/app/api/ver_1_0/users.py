@@ -77,3 +77,15 @@ def delete_user_info(user_id: int, github_user_id: int):
     db.session.commit()
 
     return jsonify({"data": f"Github user with id {github_user_id} has been deleted"})
+
+
+@users_api.route("/index/<string:github_user_username>", methods=["GET"])
+# @token_required
+def get_user_from_github(github_user_username: str):
+
+    try:
+        github_user = search_for_user(github_user_username)
+
+        return jsonify({"data": f"{github_user}"})
+    except Exception:
+        return jsonify({"data": f"user {github_user_username} has not found"})

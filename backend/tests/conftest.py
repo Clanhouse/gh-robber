@@ -1,6 +1,7 @@
 import pytest
 
-from app import create_app, db
+from app import db
+from app import create_app
 from app.commands.db_manage_command import add_data
 
 
@@ -25,15 +26,14 @@ def client(app):
 @pytest.fixture
 def user(client):
     user = {"username": "test", "password": "123456", "email": "test@gmail.com"}
-    client.post("/api/v1/auth/register", json=user)
+    client.post("/auth/register", json=user)
     return user
 
 
 @pytest.fixture
 def token(client, user):
     response = client.post(
-        "/api/v1/auth/login",
-        json={"username": user["username"], "password": user["password"]},
+        "/auth/login", json={"username": user["username"], "password": user["password"]}
     )
     return response.get_json()["token"]
 

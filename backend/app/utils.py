@@ -1,5 +1,5 @@
 import jwt
-from flask import request, url_for, current_app, abort
+from flask import request, current_app, abort
 from werkzeug.exceptions import UnsupportedMediaType
 from functools import wraps
 

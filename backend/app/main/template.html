@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <h1 id="display">Hello from template.html</h1>
+
+    <script>
+        fetch('http://127.0.0.1:5000/cors')
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(myJson){
+            document.getElementById('display').innerHTML = myJson['data'];
+        })
+    </script>
+
+
+</body>
+</html>

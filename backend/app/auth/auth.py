@@ -12,15 +12,31 @@ from app.utils import validate_json_content_type, token_required
 @use_args(user_schema, error_status_code=400)
 def register(args: dict):
     if User.query.filter(User.username == args["username"]).first():
-        abort(409, description=f"User with username {args['username']} already exists")
+        abort(
+            jsonify(
+                {
+                    "success": False,
+                    "description": f"User with username {args['username']} already exists",
+                }
+            ),
+            409,
+        )
     if User.query.filter(User.email == args["email"]).first():
-        abort(409, description=f"User with email {args['email']} already exists")
+        abort(
+            jsonify(
+                {
+                    "success": False,
+                    "description": f"User with email {args['email']} already exists",
+                }
+            ),
+            409,
+        )
 
     args["password"] = User.generate_hashed_password(args["password"])
     user = User(**args)
 
-    db.sesion.add(user)
-    db.sesion.commit()
+    db.session.add(user)
+    db.session.commit()
 
     token = user.generate_jwt()
 

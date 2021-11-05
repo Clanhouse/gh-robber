@@ -1,11 +1,14 @@
-from flask import jsonify, request, make_response
-from webargs.flaskparser import use_args
 from app import db
+from flask import jsonify
+from flask import request
+from flask import make_response
+from webargs.flaskparser import use_args
 from app.api.ver_1_0 import users_api
-from app.models import GithubUserInfo, GithubUserInfoSchema, info_schema
-from app.utils import validate_json_content_type, token_required
-from app.GH_API_handling import search_for_user
-import json
+from app.models import GithubUserInfo
+from app.models import GithubUserInfoSchema
+from app.models import info_schema
+from app.utils import token_required
+from app.utils import validate_json_content_type
 
 
 @users_api.route("/users", methods=["GET"])
@@ -27,14 +30,14 @@ def get_user_info(github_user_id: int):
     github_user = GithubUserInfo.query.get_or_404(
         github_user_id, description=f"Github user with id {github_user_id} not found"
     )
-    return jsonify({"data": info_schema.dump(github_user)})
+    return jsonify({"success": True, "data": info_schema.dump(github_user)})
 
 
 @users_api.route("/users", methods=["POST"])
-# @token_required
+@token_required
 @validate_json_content_type
 @use_args(info_schema, error_status_code=400)
-def create_user_info(args: dict):
+def create_user_info(user_id: int, args: dict):
     github_user = GithubUserInfo(**args)
 
     db.session.add(github_user)
@@ -44,19 +47,18 @@ def create_user_info(args: dict):
 
 
 @users_api.route("/users/<int:github_user_id>", methods=["PUT"])
-# @token_required
+@token_required
 @validate_json_content_type
 @use_args(info_schema, error_status_code=400)
-def update_user_info(args: dict, github_user_id: int):
+def update_user_info(user_id: int, args: dict, github_user_id: int):
     github_user = GithubUserInfo.query.get_or_404(
         github_user_id, description=f"Github user with id {github_user_id} not found"
     )
 
     github_user.username = args["username"]
-    github_user.repository = args["repository"]
     github_user.language = args["language"]
     github_user.date = args["date"]
-    github_user.stars = args["star"]
+    github_user.stars = args["stars"]
     github_user.number_of_repositories = args["number_of_repositories"]
 
     db.session.commit()
@@ -65,8 +67,8 @@ def update_user_info(args: dict, github_user_id: int):
 
 
 @users_api.route("/users/<int:github_user_id>", methods=["DELETE"])
-# @token_required
-def delete_user_info(github_user_id: int):
+@token_required
+def delete_user_info(user_id: int, github_user_id: int):
     github_user = GithubUserInfo.query.get_or_404(
         github_user_id, description=f"Github user with id {github_user_id} not found"
     )

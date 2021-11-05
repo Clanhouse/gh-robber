@@ -1,12 +1,10 @@
 import os
-
 from dotenv import load_dotenv
 from pathlib import Path
 
-basedir = os.path.abspath(os.path.dirname(__file__))
 
 basedir = Path(__file__).resolve().parent
-env_file = basedir / ".env"
+env_file = basedir / "env.txt"
 load_dotenv(env_file)
 
 
@@ -18,34 +16,24 @@ class Config:
     PER_PAGE = 5
     JWT_EXPIRED_MINUTES = 30
 
-    @staticmethod
-    def init_app(app):
-        pass
-
-
-class DevelopmentConfig(Config):
-    SQLALCHEMY_COMMIT_ON_TEARDOWN = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        "DEV_DATABASE_URL"
-    ) or "sqlite:///" + os.path.join(basedir, "data-dev.sqlite")
-
 
 class TestingConfig(Config):
-    SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     DB_FILE_PATH = basedir / "tests" / "test.db"
     SQLALCHEMY_DATABASE_URI = f"sqlite:///{DB_FILE_PATH}"
-    # SQLALCHEMY_DATABASE_URI = os.environ.get(
-    #     "TEST_DATABASE_URL"
-    # ) or "sqlite:///" + os.path.join(basedir, "data-testing.sqlite")
     DEBUG = True
     TESTING = True
 
 
+class DevelopmentConfig(Config):
+    SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
+
+
 class ProductionConfig(Config):
-    SQLALCHEMY_COMMIT_ON_TEARDOWN = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        "DATABASE_URL"
-    ) or "sqlite:///" + os.path.join(basedir, "data.sqlite")
+    DB_HOST = os.environ.get('DB_HOST')
+    DB_USERNAME = os.environ.get('DB_USERNAME')
+    DB_PASSWORD = os.environ.get('DB_PASSWORD')
+    DB_NAME = os.environ.get('DB_NAME')
+    SQLALCHEMY_DATABASE_URI = f'mysql+pymysql://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}?charset=utf8mb4'
 
 
 config = {

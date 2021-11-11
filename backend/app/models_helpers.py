@@ -4,7 +4,7 @@ from random import choice
 import forgery_py
 from sqlalchemy.exc import IntegrityError
 from . import db
-from app.models import GithubUserInfo
+from app.models import GithubUserInfo, GithubRepositories
 from app.models import GithubUserInfoSchema
 
 
@@ -28,16 +28,22 @@ def create_fake_info(count=10):
     """Create sample data to database"""
     seed()
     for _ in range(count):
-        fake_info = GithubUserInfo(
+        fake_repo = GithubRepositories(
             id=None,
-            username=forgery_py.internet.user_name(True),
+            reponame=forgery_py.internet.user_name(True),
             languages=[choice(LANGUAGE_LIST)],
+            topics=[1, 2, 3],
             date=forgery_py.date.date(),
             stars=randint(1, 100),
-            number_of_repositories=randint(1, 10),
-            repository=str(randint(1, 100)).join("repo")
         )
-        db.session.add(fake_info)
+        db.session.add(fake_repo)
+
+        fake_user = GithubUserInfo(
+            id=None,
+            username=forgery_py.internet.user_name(True),
+            repositories=[fake_repo],
+        )
+        db.session.add(fake_user)
     try:
         db.session.commit()
     except IntegrityError:

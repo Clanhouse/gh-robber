@@ -13,9 +13,12 @@ from marshmallow import fields
 from marshmallow import validate
 from marshmallow import validates
 from marshmallow import ValidationError
-from sqlalchemy import or_
+from sqlalchemy import distinct, or_
 from sqlalchemy import and_
 from sqlalchemy import not_
+from sqlalchemy import Table, Column, Integer, ForeignKey, func
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base, relationship
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.sql.expression import BinaryExpression
 from werkzeug.security import generate_password_hash
@@ -23,15 +26,48 @@ from werkzeug.security import check_password_hash
 from . import db
 
 
+class GHReposAndUsers(db.Model):
+    __tablename__ = "gh_repos_and_gh_users"
+    id = db.Column(Integer, primary_key=True)
+    github_user_id = db.Column(Integer, ForeignKey("github_users_info.id"))
+    github_repository_id = db.Column(Integer, ForeignKey("github_repositories.id"))
+
+
+class GithubRepositories(db.Model):
+    __tablename__ = "github_repositories"
+    id = db.Column(db.Integer, primary_key=True)
+    reponame = db.Column(db.String(70), nullable=False)
+    languages = db.Column(db.JSON, nullable=False)
+    last_update = db.Column(db.Date(), nullable=False)
+    topics = db.Column(db.JSON, nullable=True)
+    last_commit_date = db.Column(db.Date(), nullable=True)
+    stars = db.Column(db.Integer, nullable=False)
+    has_sourced_users = db.Column(db.Boolean)
+    contributors = db.relationship(
+        "GithubUserInfo",
+        secondary="gh_repos_and_gh_users",
+        back_populates="repositories",
+    )
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__}->: {self.reponame}"
+
+    def create(self):
+        db.session.add(self)
+        db.session.commit()
+        return self
+
+
 class GithubUserInfo(db.Model):
     __tablename__ = "github_users_info"
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), nullable=False)
-    repository = db.Column(db.String(70), nullable=False)
-    languages = db.Column(db.JSON, nullable=False)
-    date = db.Column(db.Date(), nullable=False)
-    stars = db.Column(db.Integer, nullable=False)
-    number_of_repositories = db.Column(db.Integer, nullable=False)
+    username = db.Column(db.String(50), unique=True, nullable=False)
+    last_update = db.Column(db.Date(), nullable=False)
+    repositories = db.relationship(
+        "GithubRepositories",
+        secondary="gh_repos_and_gh_users",
+        back_populates="contributors",
+    )
 
     def __repr__(self):
         return f"<{self.__class__.__name__}->: {self.username}"
@@ -77,60 +113,221 @@ class GithubUserInfo(db.Model):
                     query = query.filter(GithubUserInfo.username.like(f"%{value}%"))
                     continue
                 if param == "language":
-                    query = query.filter(GithubUserInfo.language.like(f"%{value}%"))
+                    langs_list = value.split(" ")
+                    for lang in langs_list:
+                        query = query.join(GithubUserInfo.repositories).filter(
+                            GithubRepositories.languages.contains(lang)
+                        )
                     continue
-                if param.startswith('number_of_repositories'):
-                    if param.endswith('[gt]'):
-                        query = query.filter(GithubUserInfo.number_of_repositories > value)
+                if param.startswith("number_of_repositories"):
+                    if param.endswith("[gt]"):
+                        users_ids_list = []
+
+                        subquery = (
+                            query.join(GithubUserInfo.repositories)
+                            .distinct(GithubUserInfo.id)
+                            .all()
+                        )
+
+                        for user in subquery:
+                            if len(user.repositories) > int(value):
+                                users_ids_list.append(user.id)
+
+                        query = query.filter(GithubUserInfo.id.in_(users_ids_list))
+
                         continue
-                    elif param.endswith('[gte]'):
-                        query = query.filter(GithubUserInfo.number_of_repositories >= value)
+                    elif param.endswith("[gte]"):
+                        users_ids_list = []
+
+                        subquery = (
+                            query.join(GithubUserInfo.repositories)
+                            .distinct(GithubUserInfo.id)
+                            .all()
+                        )
+
+                        for user in subquery:
+                            if len(user.repositories) >= int(value):
+                                users_ids_list.append(user.id)
+
+                        query = query.filter(GithubUserInfo.id.in_(users_ids_list))
+
                         continue
-                    elif param.endswith('[lt]'):
-                        query = query.filter(GithubUserInfo.number_of_repositories < value)
+                    elif param.endswith("[lt]"):
+                        users_ids_list = []
+
+                        subquery = (
+                            query.join(GithubUserInfo.repositories)
+                            .distinct(GithubUserInfo.id)
+                            .all()
+                        )
+
+                        for user in subquery:
+                            if len(user.repositories) < int(value):
+                                users_ids_list.append(user.id)
+
+                        query = query.filter(GithubUserInfo.id.in_(users_ids_list))
+
                         continue
-                    elif param.endswith('[lte]'):
-                        query = query.filter(GithubUserInfo.number_of_repositories <= value)
+                    elif param.endswith("[lte]"):
+                        users_ids_list = []
+
+                        subquery = (
+                            query.join(GithubUserInfo.repositories)
+                            .distinct(GithubUserInfo.id)
+                            .all()
+                        )
+
+                        for user in subquery:
+                            if len(user.repositories) <= int(value):
+                                users_ids_list.append(user.id)
+
+                        query = query.filter(GithubUserInfo.id.in_(users_ids_list))
+
                         continue
                     else:
-                        query = query.filter(GithubUserInfo.number_of_repositories == value)
+                        users_ids_list = []
+
+                        subquery = (
+                            query.join(GithubUserInfo.repositories)
+                            .distinct(GithubUserInfo.id)
+                            .all()
+                        )
+
+                        for user in subquery:
+                            if len(user.repositories) == int(value):
+                                users_ids_list.append(user.id)
+
+                        query = query.filter(GithubUserInfo.id.in_(users_ids_list))
+
                         continue
                 if param.startswith("date"):
-                    try:
-                        value = datetime.strptime(value, '%d-%m-%Y').date()
-                        if param.endswith('[gt]'):
-                            query = query.filter(GithubUserInfo.date > value)
-                            continue
-                        elif param.endswith('[gte]'):
-                            query = query.filter(GithubUserInfo.date >= value)
-                            continue
-                        elif param.endswith('[lt]'):
-                            query = query.filter(GithubUserInfo.date < value)
-                            continue
-                        elif param.endswith('[lte]'):
-                            query = query.filter(GithubUserInfo.date <= value)
-                            continue
-                        else:
-                            query = query.filter(GithubUserInfo.date == value)
-                            continue
+                    pass
+                    ## last_commit_date scraping functionality to be added to database
+
+                    ## try:
+                    ##     value = datetime.strptime(value, "%d-%m-%Y").date()
+                    ##     if param.endswith("[gt]"):
+                    ##         query = query.filter(GithubUserInfo.date > value)
+                    ##         continue
+                    ##     elif param.endswith("[gte]"):
+                    ##         query = query.filter(GithubUserInfo.date >= value)
+                    ##         continue
+                    ##     elif param.endswith("[lt]"):
+                    ##         query = query.filter(GithubUserInfo.date < value)
+                    ##         continue
+                    ##     elif param.endswith("[lte]"):
+                    ##         query = query.filter(GithubUserInfo.date <= value)
+                    ##         continue
+                    ##     else:
+                    ##         query = query.filter(GithubUserInfo.date == value)
+                    ##         continue
+                    ## except ValueError:
+                    ##     continue
+                if param.startswith("stars"):
+                    if param.endswith("[gt]"):
+                        users_ids_list = []
+                        users_stars_dict = {}
+
+                        subquery = (
+                            query.join(GithubUserInfo.repositories)
+                            .distinct(GithubUserInfo.id)
+                            .all()
+                        )
+
+                        for user in subquery:
+                            users_stars_dict[user] = 0
+                            for repo in user.repositories:
+                                users_stars_dict[user] = (
+                                    users_stars_dict[user] + repo.stars
+                                )
+                            if users_stars_dict[user] > int(value):
+                                users_ids_list.append(user.id)
+
+                        query = query.filter(GithubUserInfo.id.in_(users_ids_list))
                         continue
-                    except ValueError:
+                    elif param.endswith("[gte]"):
+                        users_ids_list = []
+                        users_stars_dict = {}
+
+                        subquery = (
+                            query.join(GithubUserInfo.repositories)
+                            .distinct(GithubUserInfo.id)
+                            .all()
+                        )
+
+                        for user in subquery:
+                            users_stars_dict[user] = 0
+                            for repo in user.repositories:
+                                users_stars_dict[user] = (
+                                    users_stars_dict[user] + repo.stars
+                                )
+                            if users_stars_dict[user] >= int(value):
+                                users_ids_list.append(user.id)
+
+                        query = query.filter(GithubUserInfo.id.in_(users_ids_list))
                         continue
-                if param.startswith('stars'):
-                    if param.endswith('[gt]'):
-                        query = query.filter(GithubUserInfo.stars > value)
+                    elif param.endswith("[lt]"):
+                        users_ids_list = []
+                        users_stars_dict = {}
+
+                        subquery = (
+                            query.join(GithubUserInfo.repositories)
+                            .distinct(GithubUserInfo.id)
+                            .all()
+                        )
+
+                        for user in subquery:
+                            users_stars_dict[user] = 0
+                            for repo in user.repositories:
+                                users_stars_dict[user] = (
+                                    users_stars_dict[user] + repo.stars
+                                )
+                            if users_stars_dict[user] < int(value):
+                                users_ids_list.append(user.id)
+
+                        query = query.filter(GithubUserInfo.id.in_(users_ids_list))
                         continue
-                    elif param.endswith('[gte]'):
-                        query = query.filter(GithubUserInfo.stars >= value)
-                        continue
-                    elif param.endswith('[lt]'):
-                        query = query.filter(GithubUserInfo.stars < value)
-                        continue
-                    elif param.endswith('[lte]'):
-                        query = query.filter(GithubUserInfo.stars <= value)
+                    elif param.endswith("[lte]"):
+                        users_ids_list = []
+                        users_stars_dict = {}
+
+                        subquery = (
+                            query.join(GithubUserInfo.repositories)
+                            .distinct(GithubUserInfo.id)
+                            .all()
+                        )
+
+                        for user in subquery:
+                            users_stars_dict[user] = 0
+                            for repo in user.repositories:
+                                users_stars_dict[user] = (
+                                    users_stars_dict[user] + repo.stars
+                                )
+                            if users_stars_dict[user] <= int(value):
+                                users_ids_list.append(user.id)
+
+                        query = query.filter(GithubUserInfo.id.in_(users_ids_list))
                         continue
                     else:
-                        query = query.filter(GithubUserInfo.stars == value)
+                        users_ids_list = []
+                        users_stars_dict = {}
+
+                        subquery = (
+                            query.join(GithubUserInfo.repositories)
+                            .distinct(GithubUserInfo.id)
+                            .all()
+                        )
+
+                        for user in subquery:
+                            users_stars_dict[user] = 0
+                            for repo in user.repositories:
+                                users_stars_dict[user] = (
+                                    users_stars_dict[user] + repo.stars
+                                )
+                            if users_stars_dict[user] == int(value):
+                                users_ids_list.append(user.id)
+
+                        query = query.filter(GithubUserInfo.id.in_(users_ids_list))
                         continue
                 return query.all()
 

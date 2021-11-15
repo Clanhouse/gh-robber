@@ -12,7 +12,7 @@ paths:
       tags:
         - Github_user_info
       summary: Get all users info
-      description: Get all guthub users info from database.
+      description: Get all github users info from database.
       operationId: Getallusersinfo
       parameters:
         - name: fields
@@ -215,7 +215,7 @@ paths:
       tags:
         - Github_user_info
       summary: Get single user info
-      description: Get single user info form the database.
+      description: Get single user info from the database.
       operationId: Getsingleuserinfo
       parameters: []
       responses:
@@ -260,7 +260,7 @@ paths:
       tags:
         - Github_user_info
       summary: Update user info
-      description: Update guthub user info in the database
+      description: Update github user info in the database
       operationId: Updateuserinfo
       parameters: []
       requestBody:

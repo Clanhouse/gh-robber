@@ -1,5 +1,5 @@
-import os
-from flask_migrate import Migrate, upgrade
+from flask_migrate import upgrade
+from flask_migrate import Migrate
 from app.models import GithubUserInfo
 from app import create_app
 from app import db

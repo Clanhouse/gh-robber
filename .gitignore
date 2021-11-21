@@ -27,6 +27,9 @@ share/python-wheels/
 *.egg
 MANIFEST
 
+# GitHub Access token
+*.GH_access_token.txt
+
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
@@ -130,3 +133,9 @@ dmypy.json
 
 #pycharm
 .idea/
+
+#vscode
+.vscode/
+
+# github personal access token
+GH_access_token.txt

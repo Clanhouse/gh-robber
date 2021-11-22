@@ -25,7 +25,13 @@ class TestingConfig(Config):
 
 
 class DevelopmentConfig(Config):
-    SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
+    SQLALCHEMY_DATABASE_URI=f'mysql+pymysql://root:plyta123@localhost/github_user_info?charset=utf8mb4'
+    # SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
+    # DB_USERNAME = os.environ.get('root')
+    # DB_PASSWORD = os.environ.get('plyta123')
+    # DB_HOST = os.environ.get('localhost')
+    # DB_NAME = os.environ.get('github_user_info')
+    # SQLALCHEMY_DATABASE_URI = f'mysql+pymysql://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}?charset=utf8mb4'
 
 
 class ProductionConfig(Config):

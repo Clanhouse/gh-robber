@@ -2,7 +2,7 @@ import { BrowserRouter, Route } from "react-router-dom";
 import { theme } from "./styles/Theme";
 import { ThemeProvider } from "styled-components";
 
-import { routes } from "./router/routes";
+import { routes } from "./routes/routes";
 import FavoriteProvider from "./context/FavoriteUser/FavoriteUsers.provider";
 import AuthProvider from "./context/Auth/authProvider";
 

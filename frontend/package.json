@@ -4,6 +4,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "devDependencies": {
+
+  },
   "workspaces": {
     "packages": ["packages/*", "client"]
   }

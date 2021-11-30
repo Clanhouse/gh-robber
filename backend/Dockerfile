@@ -1,5 +1,5 @@
 # pull official base image
-FROM python:3.8-alpine
+FROM python:3.9-slim
 
 MAINTAINER Clanhouse
 
@@ -14,13 +14,17 @@ ENV PYTHONDONTWRITEBYTECODE 1
 RUN apt-get update && apt-get install -y netcat
 
 # install dependencies
-COPY ./requirements.txt /requirements.txt
+COPY ./requirements.txt /app/requirements.txt
 RUN pip install -r requirements.txt
 
 # copy project
-COPY ./app /app
+ADD ./app /app/app
+COPY gh_robber.py /app
+COPY config.py /app
+COPY .flaskenv /app
 
-# run entrypoint.sh
-#ENTRYPOINT ["/gh_robber-app/entrypoint.sh"]
 
-CMD ["python", "./gh_robber.py"]
+COPY entrypoint.sh /app
+#CMD ["python", "gh_robber.py"]
+
+CMD ["/app/entrypoint.sh"]

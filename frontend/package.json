@@ -5,9 +5,16 @@
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
-
+    "esbuild-loader": "^2.16.0",
+    "lerna": "^4.0.0"
+  },
+  "scripts": {
+    "dev": "npx lerna run start"
   },
   "workspaces": {
-    "packages": ["packages/*", "client"]
+    "packages": [
+      "packages/*",
+      "client"
+    ]
   }
 }

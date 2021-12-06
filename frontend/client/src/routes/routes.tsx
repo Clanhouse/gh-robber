@@ -4,15 +4,28 @@ import Search from "../components/Search/Search";
 import RepoList from "../components/RepoList/RepoList";
 import FavoriteList from "../components/Favorites/FavoriteList/FavoriteList";
 import Home from "../components/Home/Home";
+import { ReactLocation, Route } from "react-location";
 
-export const routes = {
-  home: () => <Home />,
-  login: () => <Login />,
-  dashboard: () => <Dashboard />,
-};
+export const routes: Route[] = [
+  { path: "/", element: () => <div>home!</div> },
+  { path: "login", element: <div>login</div> },
+  {
+    path: "dashboard",
+    children: [
+      {
+        path: "repolist",
+        element: <div>RepoList</div>,
+      },
+      {
+        path: "search",
+        element: <div>Search</div>,
+      },
+      {
+        path: "favorites",
+        element: <div>FavoriteList</div>,
+      },
+    ],
+  },
+];
 
-export const dashboardRoutes = {
-  repolist: () => <RepoList />,
-  search: () => <Search />,
-  favorites: () => <FavoriteList />,
-};
+export const location = new ReactLocation();

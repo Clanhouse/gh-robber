@@ -45,7 +45,7 @@ class GithubUserInfo(db.Model):
 
 
 class UserAccountView(sqla.ModelView):
-    list_template = 'list_users.html'
+    list_template = 'templates/db_views/list_users.html'
     column_searchable_list = ('id','name', 'email')
     column_list = ('id','name', 'email', 'password')
     column_display_pk = True

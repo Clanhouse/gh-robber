@@ -1,0 +1,12 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+    User Data Methods<br/>
+	<form method="POST" action="{{ url_for('.UsersAPI') }}">
+	  <input type="submit" value="POST">
+	  <a href="{{ url_for('.UsersAPI') }}">GET</a>
+	</form>
+	<form method="POST" action="{{ url_for('.UsersAPI') }}">
+	  <input type="submit" value="POST">
+	  <a href="{{ url_for('.UsersAPI') }}">GET</a>
+	</form>
+{% endblock %}

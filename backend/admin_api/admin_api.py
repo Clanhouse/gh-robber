@@ -32,9 +32,9 @@ def index():
 admin = Admin(app, base_template='admin/custom_base.html', index_view=AdminIndexView(name='Dashboard', template='dashboard.html'), template_mode='bootstrap4')
 
 from .admin_api import admin_models
-from ..admin_models import UserAccountView, User, GHUsersInfoView, GithubUserInfo, AuthView
-
-
+from ..admin_models import UserAccountView, User, GHUsersInfoView, GithubUserInfo, AuthView, DocsView
+    
+admin.add_view(DocsView(name="Documentation", endpoint='/docs'))
 admin.add_view(UserAccountView(User, db.session, name="User Management"))
 admin.add_view(GHUsersInfoView(GithubUserInfo, db.session, name="Github Management"))
 admin.add_view(GHUsersAPIView(name="API", endpoint="/api/v1/users"))

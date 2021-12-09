@@ -1,0 +1,89 @@
+{% extends 'admin/master.html' %}
+{{ super() }}
+{% block body %}
+{{ super() }}
+<style>
+.bg-neongreen {
+ 	background-color: #3DFCBE!important;
+ }
+ .bg-neonblue {
+  	background-color: #64FBD9!important;
+  }
+ </style>
+<div class="justify-content-between flex-wrap flex-column col">
+  <div class="card-columns">
+  <div class="card">
+    <img class="card-img-top" src="https://cdn3.iconfinder.com/data/icons/inficons/512/github.png" alt="Github logo" height=10%>
+    <div class="card-body">
+      <h5 class="card-title">Github Robber</h5>
+      <p class="card-text">Github robber is an application that collects profiles on Github, ranks and makes them available to recruiters in the form of subscription.</p>
+      <p class="card-text"><small><a href="https://github.com/Trianglium/gh-robber">  Fork Us on Github</a></small></p>
+    </div>
+  </div>
+  <div class="card text-dark bg-neonblue mb-3">
+    <blockquote class="blockquote mb-0 card-body">
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+      <footer class="blockquote-footer">
+        <small class="text-dark">
+          Someone famous in <cite title="Source Title">Source Title</cite>
+        </small>
+      </footer>
+    </blockquote>
+  </div>
+  <div class="card">
+    <img class="card-img-top" src="https://i1.wp.com/geeksnewslab.com/wp-content/uploads/2019/07/hello-world.png?fit=640%2C377&ssl=1&resize=1280%2C720" alt="Hello World">
+    <div class="card-body">
+      <h5 class="card-title">Hello World</h5>
+      <p class="card-text">The official way to know if you should put a programming language on your resume or not...Can you print it?</p>
+      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+    </div>
+  </div>
+  <div class="card bg-primary text-white text-center p-3">
+    <blockquote class="blockquote mb-0">
+      <p>Words of Wisdom.</p>
+      <footer class="blockquote-footer">
+        <small>
+          John Ruskin <cite title="Source Title">Source Title</cite>
+        </small>
+      </footer>
+    </blockquote>
+  </div>
+  <div class="card text-center">
+    <div class="card-body">
+      <h5 class="card-title">Title</h5>
+      <p class="card-text">bod</p>
+      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+    </div>
+  </div>
+  <div class="card">
+    <img class="card-img" src="https://static.thenounproject.com/png/554085-200.png" alt="Code image">
+  </div>
+  <div class="card p-3 text-right text-dark bg-neongreen">
+    <blockquote class="blockquote mb-0">
+      <p>Quality is never an accident.</p>
+      <footer class="blockquote-footer">
+        <small class="text-dark">
+          John Ruskin <cite title="Source Title">Source Title</cite>
+        </small>
+      </footer>
+    </blockquote>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Semi Colons</h5>
+      <p class="card-text">The bane of my existence.</p>
+      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+    </div>
+  </div>
+  <div class="card bg-primary text-white text-center p-3">
+    <blockquote class="blockquote mb-0">
+      <p>"Programming isn't about what you know; it's about what you can figure out.”</p>
+      <footer class="blockquote-footer">
+        <small>
+          Chris Pine <cite title="Source Title"></cite>
+        </small>
+      </footer>
+    </blockquote>
+  </div>
+</div>
+{% endblock body %}

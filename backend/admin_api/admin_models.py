@@ -124,3 +124,9 @@ class AuthView(BaseView):
 
         def get(self, cls):
             return cls.render('method_request.html', request=request, name="Update Information")
+        
+        
+   
+class DocsView(BaseView):
+    def index(self):
+        return self.render('documentation.html')

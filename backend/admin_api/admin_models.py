@@ -128,5 +128,6 @@ class AuthView(BaseView):
         
    
 class DocsView(BaseView):
+    @expose('/')
     def index(self):
         return self.render('documentation.html')

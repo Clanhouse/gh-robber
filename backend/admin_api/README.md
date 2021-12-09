@@ -19,5 +19,5 @@
 <ol>
   <i>if requirements.txt does not install properly, manually tell pip to install flask, flask_sqlaclhemy, and flask_admin</i>
 </ol>
-<h4>2. Run the app wit python</h4>
-  <code>> python admin_app.py</code>
+<h4>2. Run the app with python</h4>
+  <code>> python admin_api.py</code>

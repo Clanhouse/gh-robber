@@ -1,5 +1,5 @@
-<h1 align="center">Admin API</h1>
-<p align="center"><strong>Github Robber's Admin Panel</strong></p>
+<h1 align="center">Github Robber - Admin API</h1>
+<p align="center"><strong>A simple admin panel to ease administrative functions in GitHub Robber.</strong></p>
 
 <h2>Setup Instructions</h2>
 

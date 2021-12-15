@@ -1,33 +1,24 @@
-version: "3"
-networks:
-  backend-network:
-
+version: "3.8"
 services:
   app:
     build:
       context: .
     ports:
       - "5000:5000"
-#    volumes:
-#      - ./app:/app
-    command: >
-      - sh -c "set FLASK_APP=gh_robber.py &&
-              flask db init  &&
-              flask db upgrade  &&
-              flask run"
-    networks:
-      backend-network:
-
-    environment:
-      - SQLALCHEMY_DATABASE_URI=
-      - SQL_HOST=gh_robber_mysql
-      - SQL_PORT=3306
-
+    volumes:
+      - .:/app
     depends_on:
       - db
 
   db:
     image: mysql
-    container_name: gh_robber_mysql
-    networks:
-      backend-network:
+    restart: always
+    environment:
+      MYSQL_DATABASE: admin
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - .dbdata:/var/lib/mysql
+    ports:
+      - 33066:3306

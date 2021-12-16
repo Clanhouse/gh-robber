@@ -1,0 +1,7 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+  The {{ name }} view can be accessed using the {{ request.method }} request.
+
+  <br>
+  <a href="{{ url_for('.index') }}">Return</a>
+{% endblock %}

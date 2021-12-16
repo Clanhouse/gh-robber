@@ -1,0 +1,63 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+  <div>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/admin/">Dashboard</a></li>
+    <li class="breadcrumb-item active">Authentication</li>
+  </ol>
+  </div><br>
+  <div>
+  <h3>User Login</h3>
+  <form method="POST" action="{{ url_for('.UserLogin') }}">
+    <label class="btn btn-primary">
+    <button type="submit" class="btn btn-primary">POST</button>
+    </label>
+  </form><br>
+  <form method="GET" action="{{ url_for('.UserLogin') }}">
+    </form><br>
+  </div>
+
+  <div>
+  <h3>User Registration</h3>
+  <form method="POST" action="{{ url_for('.UserRegistration') }}">
+    <label class="btn btn-primary">
+    <button type="submit" class="btn btn-primary">POST</button>
+    </label>
+  </form><br>
+  <form method="GET" action="{{ url_for('.UserRegistration') }}">
+    </form><br>
+  </div>
+
+  <div>
+  <h3>Get Current User</h3>
+  <form method="GET" action="{{ url_for('.CurrentUser') }}">
+    <label class="btn btn-primary">
+    <button type="submit" class="btn btn-primary">GET</button>
+    </label>
+  </form><br>
+  <form method="POST" action="{{ url_for('.CurrentUser') }}">
+    </form><br>
+  </div>
+
+  <div>
+  <h3>Update User Data</h3>
+  <form method="POST" action="{{ url_for('.UpdateUserData') }}">
+    <label class="btn btn-primary">
+    <button type="submit" class="btn btn-primary">PUT</button>
+    </label>
+  </form><br>
+  <form method="GET" action="{{ url_for('.UpdateUserData') }}">
+  </form><br>
+  </div>
+
+  <div>
+  <h3>Update User Password</h3>
+  <form method="POST" action="{{ url_for('.UpdateUserPassword') }}">
+    <label class="btn btn-primary">
+    <button type="submit" class="btn btn-primary">PUT</button>
+    </label>
+  </form><br>
+  <form method="GET" action="{{ url_for('.UpdateUserPassword') }}">
+  </form><br>
+  </div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+<div>
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/admin/">Dashboard</a></li>
+  <li class="breadcrumb-item active">API</li>
+  <li class="breadcrumb-item active">v1</li>
+  <li class="breadcrumb-item active">users</li>
+</ol>
+</div><br>
+<div>
+<h3>Create User Info</h3>
+<form method="POST" action="{{ url_for('.UsersAPI') }}">
+  <label class="btn btn-primary">
+  <button type="submit" class="btn btn-primary">POST</button>
+  </label>
+</form><br>
+<h3>Get User Info</h3>
+<form method="GET" action="{{ url_for('.UsersAPI') }}">
+  <label class="btn btn-primary">
+  <button type="submit" class="btn btn-primary">GET</button>
+  </label>
+</form><br>
+</div>
+{% endblock %}

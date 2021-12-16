@@ -49,8 +49,6 @@ def create_app(config_name="development"):
     from app.errors import errors_bp
     from app.api.ver_1_0 import users_api
     # CORS(users_api)
-    #from app.api.ver_1_0 import admin_api
-    #CORS(admin_api)
     from app.auth import auth_bp
     CORS(auth_bp)
     app.register_blueprint(db_manage_bp)

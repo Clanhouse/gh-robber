@@ -7,62 +7,20 @@ import flask_admin
 from flask_admin.contrib import sqla
 from flask_admin import Admin
 from flask_admin.base import BaseView, expose, expose_plugview, AdminIndexView
+import os
 from flask_admin.menu import MenuCategory, MenuView, MenuLink, SubMenuCategory
 from flask.views import MethodView
 from flask import render_template
+from config import db, app
 
+# To do: Change this route when integrating other GH Robber components
+@app.route('/')
+def index():
+    return '<a href="/admin/">Click me to get to Admin!</a>'
 
+admin = Admin(app, base_template='admin/custom_base.html', index_view=AdminIndexView(name='Dashboard', template='dashboard.html'), template_mode='bootstrap4')
 
-class Role(db.Model):
-    role_id = db.Column(db.Integer, primary_key=True,  autoincrement=True)
-    title = db.Column(db.String(255))
-    desc = db.Column(db.String(50))
-
-    def __unicode__(self):
-        return self.desc
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True,  autoincrement=True)
-    name = db.Column(db.String(255), nullable=False)
-    email = db.Column(db.String(255), nullable=False)
-    password = db.Column(db.String(20), nullable=False)
-    desc = db.Column(db.String(50))
-    def __unicode__(self):
-        return self.desc
-
-class GithubUserInfo(db.Model):
-    id = db.Column(db.Integer, primary_key=True,  autoincrement=True)
-    username = db.Column(db.String(255), nullable=False)
-    repository = db.Column(db.String(255), nullable=False)
-    languages = db.Column(db.JSON, nullable=False)
-    date = db.Column(db.Date(), nullable=False)
-    number_of_repositories = db.Column(db.Integer, nullable=False)
-    stars = db.Column(db.Integer, nullable=False)
-    desc = db.Column(db.String(50))
-
-    def __unicode__(self):
-        return self.desc
-
-
-class UserAccountView(sqla.ModelView):
-    list_template = 'templates/db_views/list_users.html'
-    create_template = 'templates/db_views/create_users.html'
-    edit_template = 'templates/db_views/edit_users.html'
-    column_searchable_list = ('id','name', 'email')
-    column_list = ('id','name', 'email', 'password')
-    column_display_pk = True
-    column_default_sort = "name"
-    form_columns = ['name', 'email', 'password']
-
-class GHUsersInfoView(sqla.ModelView):
-    list_template = 'templates/db_views/list_users.html'
-    create_template = 'templates/db_views/create_users.html'
-    edit_template = 'templates/db_views/edit_users.html'
-    column_searchable_list = ('id','username', 'repository', 'languages', 'date','number_of_repositories')
-    column_list = ('id','username', 'repository', 'languages', 'date', 'number_of_repositories', 'stars')
-    column_display_pk = True
-    column_default_sort = "stars"
-    form_columns = ['username', 'repository', 'languages', 'date', 'number_of_repositories', 'stars']
+from admin_models import Role, User, GithubUserInfo,UserAccountView, GHUsersInfoView
 
 class GHUsersAPIView(BaseView):
     @expose('/', methods=('GET','POST'))
@@ -124,10 +82,26 @@ class AuthView(BaseView):
 
         def get(self, cls):
             return cls.render('method_request.html', request=request, name="Update Information")
-        
-        
-   
+
 class DocsView(BaseView):
     @expose('/')
     def index(self):
         return self.render('documentation.html')
+
+
+admin.add_view(UserAccountView(User, db.session, name="User Management"))
+admin.add_view(GHUsersInfoView(GithubUserInfo, db.session, name="Github Management"))
+
+admin.add_view(GHUsersAPIView(name="API", endpoint="/api/v1/users"))
+
+admin.add_view(AuthView(name="Authentication", endpoint='/auth'))
+admin.add_view(DocsView(name="Documentation", endpoint='/docs'))
+
+#admin.add_view(RoleView(Role, db.session, category="Role"))
+
+
+if __name__ == '__main__':
+
+    db.create_all()
+
+    app.run(debug=True)

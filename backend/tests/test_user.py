@@ -56,7 +56,7 @@ def test_single_github_user_info(client, sample_data):
     assert response.headers["Content-Type"] == "application/json"
     assert response_data["data"]["username"] is not None
     assert response_data["data"]["date"] is not None
-    assert response_data["data"]["language"] is not None
+    assert response_data["data"]["languages"] is not None
     assert response_data["data"]["stars"] is not None
     assert response_data["data"]["number_of_repositories"] is not None
 

@@ -1,0 +1,45 @@
+{% extends 'admin/master.html' %}
+{{ super() }}
+{% block body %}
+{{ super() }}
+<style>
+.br-rnd {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.25);
+  transition: 0.3s;
+  border-radius: 10px;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.3);
+}
+
+.img-rnd {
+  border-radius: 180px;
+}
+h1.blkcd {
+  color: white;
+}
+
+.bg-neongreen {
+ 	background-color: #3DFCBE!important;
+  border-color: #3DFCBE!important;
+ }
+ .bg-neonblue {
+  	background-color: #64FBD9!important;
+    border-color: #64FBD9!important;
+  }
+ </style>
+<div class="justify-content-between flex-wrap flex-column col">
+  <div class="card-columns">
+    <div class="card bg-primary text-white text-center p-3 mb-3 br-rnd">
+      <blockquote class="blockquote mb-0">
+        <h1 class="blkcd">Welcome to the Dashboard</h1>
+      </blockquote>
+    </div>
+    <div class="card text-dark text-center p-3 mb-3 br-rnd">
+      <blockquote class="blockquote mb-0">
+        <h3>This page is still being developed.</h3>
+      </blockquote>
+    </div>
+</div>
+{% endblock body %}

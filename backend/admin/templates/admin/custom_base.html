@@ -18,6 +18,7 @@
         <link href="{{ admin_static.url(filename='bootstrap/bootstrap4/css/bootstrap.min.css', v='4.2.1') }}" rel="stylesheet">
         {% endif %}
         <link href="{{ admin_static.url(filename='admin/css/bootstrap4/admin.css', v='1.1.1') }}" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
         <link href="{{ admin_static.url(filename='bootstrap/bootstrap4/css/font-awesome.min.css', v='4.7.0') }}" rel="stylesheet">
         {% if admin_view.extra_css %}
           {% for css_url in admin_view.extra_css %}
@@ -25,6 +26,39 @@
           {% endfor %}
         {% endif %}
         <style>
+        .nav-link {
+          display: block;
+          padding: 0.5rem 0.75rem;
+          padding-top: 0.5rem;
+          padding-right: 0.75rem;
+          padding-bottom: 0.5rem;
+          padding-left: 0.75rem;
+        }
+          .mw-form {
+            max-width: 2000px;
+          }
+          .pl-5, .px-5 {
+            padding-left: 0.1rem !important;
+          }
+          .col-lg-10 {
+            max-width: 100%;
+          }
+
+          .mw-sidenav {
+            max-width: 10%!important;
+          }
+            #eighty-pix {
+              list-style-type: none;
+              margin: 0;
+              padding: 0;
+              width: 80px;
+              position: fixed;
+              height: 100%;
+              overflow: auto;
+            }
+            i {
+              font-size: 18px!important;
+            }
             .hide {
                 display: none;
             }
@@ -37,7 +71,7 @@
   </head>
 <body>
 {% block page_body %}
-    <div class="container{% if config.get('FLASK_ADMIN_FLUID_LAYOUT', False) %}-fluid{% endif %}">
+    <div class="container mw-form {% if config.get('FLASK_ADMIN_FLUID_LAYOUT', False) %}-fluid{% endif %}">
         <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-primary flex-md-nowrap p-3" role="navigation">
             <!-- Brand and toggle get grouped for better mobile display -->
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#admin-navbar-collapse"
@@ -59,8 +93,13 @@
             {% block main_menu %}
               <div class="container-fluid">
                 <div class="d-flex row">
-                  <nav class="col-md-2 d-block d-md-block bg-primary sidebar text-white">
+                  <nav class="col-md-2 d-block d-md-block bg-primary sidebar text-white mw-sidenav">
                     <div class="sidebar-sticky">
+                      <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted bg-primary">
+                        <span></span>
+                        <a class="d-flex align-items-center text-muted" href="#">
+                        </a>
+                      </h6>
                       <ul class="nav flex-column mb-2">
                         <li class="nav-item">
                           <a class="nav-link text-white bg-primary" href="/admin/">
@@ -70,25 +109,21 @@
                         </li>
                       </ul>
                       <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted bg-primary">
-                        <span>General</span>
+                        <span></span>
                         <a class="d-flex align-items-center text-muted" href="#">
-                          <span></span>
                         </a>
                       </h6>
                       <ul class="nav flex-column mb-2">
                         <li class="nav-item">
-                          <a class="nav-link text-white bg-primary" href="#">
-                            <span></span>
-                            Feed
-                          </a>
                         </li>
                         <li class="nav-item">
-                          <a class="nav-link text-white bg-primary" href="#">
-                            <span></span>
-                            Recommended
-                          </a>
+                        </li>
+                        <li class="nav-item">
+                        </li>
+                        <li class="nav-item">
                         </li>
                       </ul>
+
                       <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted bg-primary">
                         <span>Manage</span>
                         <a class="d-flex align-items-center text-muted" href="#">
@@ -107,6 +142,21 @@
                             <span></span>
                             Github Data
                           </a>
+                        </li>
+                      </ul>
+                      <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted bg-primary">
+                        <span></span>
+                        <a class="d-flex align-items-center text-muted" href="#">
+                        </a>
+                      </h6>
+                      <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                        </li>
+                        <li class="nav-item">
+                        </li>
+                        <li class="nav-item">
+                        </li>
+                        <li class="nav-item">
                         </li>
                       </ul>
                       <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted bg-primary">
@@ -148,34 +198,44 @@
                         </li>
                         <li class="nav-item">
                           <a class="nav-link text-white bg-primary" href="/admin/auth/">
-                            <span data-feather="file-text"></span>
                             Advanced
                           </a>
                         </li>
                       </ul>
                       <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted bg-primary">
-                        <span>System</span>
+                        <span></span>
                         <a class="d-flex align-items-center text-muted" href="#">
-                          <span data-feather="plus-circle"></span>
                         </a>
                       </h6>
                       <ul class="nav flex-column mb-2">
                         <li class="nav-item">
-                          <a class="nav-link text-white bg-primary" href="#">
-                            <span></span>
-                            Support
-                          </a>
                         </li>
                         <li class="nav-item">
-                          <a class="nav-link text-white bg-primary" href="#">
-                            <span></span>
-                            Display (TBD)
-                          </a>
                         </li>
+                        <li class="nav-item">
+                        </li>
+                        <li class="nav-item">
+                        </li>
+                      </ul>
+                      <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted bg-primary">
+                        <span></span>
+                        <a class="d-flex align-items-center text-muted" href="#">
+                        </a>
+                      </h6>
+                      <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                        </li>
+                        <li class="nav-item">
+                        </li>
+                        <li class="nav-item">
+                        </li>
+                        <li class="nav-item">
+                        </li>
+                      </ul>
+                      <ul class="nav flex-column mb-2">
                         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted bg-primary">
                           <span>About</span>
                           <a class="d-flex align-items-center text-muted" href="#">
-                            <span data-feather="plus-circle"></span>
                           </a>
                         </h6>
                         <li class="nav-item">
@@ -190,6 +250,7 @@
                             Docs
                           </a>
                         </li>
+                      </ul>
                       </ul>
                     </div>
                   </nav>

@@ -31,7 +31,8 @@ class UserAccountView(sqla.ModelView):
     column_list = ('id','name', 'email')
     column_display_pk = True
     column_default_sort = "name"
-    form_columns = ['name', 'email', 'password']
+    form_columns = ['name', 'email']
+    form_excluded_columns = ['password']
 
 class GHUsersInfoView(sqla.ModelView):
     column_searchable_list = ('id','username', 'repository', 'languages', 'date','number_of_repositories')

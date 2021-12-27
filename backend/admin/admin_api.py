@@ -97,8 +97,6 @@ admin.add_view(GHUsersAPIView(name="API", endpoint="/api/v1/users"))
 admin.add_view(AuthView(name="Authentication", endpoint='/auth'))
 admin.add_view(DocsView(name="Documentation", endpoint='/docs'))
 
-#admin.add_view(RoleView(Role, db.session, category="Role"))
-
 
 if __name__ == '__main__':
 

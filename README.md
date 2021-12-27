@@ -19,7 +19,7 @@ and makes them available to recruiters in the form of subscription.
    On Linux: `export FLASK_APP=gh_robber.py`
 
 5. Type in terminal `flask db init`
-6. Type in terminal `flask upgrade if the data is already in the database`
+6. Type in terminal `flask upgrade` if the data is already in the database
 7. Type in terminal `flask run`
 
 ### How to create fake data

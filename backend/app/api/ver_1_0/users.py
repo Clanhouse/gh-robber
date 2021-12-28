@@ -1,9 +1,14 @@
-from flask import jsonify, request, make_response
-from webargs.flaskparser import use_args
 from app import db
+from flask import jsonify
+from flask import request
+from flask import make_response
+from webargs.flaskparser import use_args
 from app.api.ver_1_0 import users_api
-from app.models import GithubUserInfo, GithubUserInfoSchema, info_schema
-from app.utils import validate_json_content_type, token_required
+from app.models import GithubUserInfo
+from app.models import GithubUserInfoSchema
+from app.models import info_schema
+from app.utils import token_required
+from app.utils import validate_json_content_type
 
 
 @users_api.route("/users", methods=["GET"])
@@ -72,3 +77,15 @@ def delete_user_info(user_id: int, github_user_id: int):
     db.session.commit()
 
     return jsonify({"data": f"Github user with id {github_user_id} has been deleted"})
+
+
+@users_api.route("/index/<string:github_user_username>", methods=["GET"])
+# @token_required
+def get_user_from_github(github_user_username: str):
+
+    try:
+        github_user = search_for_user(github_user_username)
+
+        return jsonify({"data": f"{github_user}"})
+    except Exception:
+        return jsonify({"data": f"user {github_user_username} has not found"})

@@ -1,7 +1,6 @@
 from app import db
 from flask import jsonify
 from flask import request
-from flask import make_response
 from webargs.flaskparser import use_args
 from app.api.ver_1_0 import users_api
 from app.models import GithubUserInfo
@@ -80,7 +79,7 @@ def delete_user_info(user_id: int, github_user_id: int):
 
 
 @users_api.route("/index/<string:github_user_username>", methods=["GET"])
-# @token_required
+@token_required
 def get_user_from_github(github_user_username: str):
 
     try:

@@ -1,10 +1,20 @@
 version: "3.8"
+networks:
+  backend_network:
+
 services:
   app:
-    build:
-      context: .
+    image: gh_robber_backend
     ports:
       - "5000:5000"
+    networks:
+      backend_network:
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USERNAME=root
+      - DB_PASSWORD=admin
+      - DB_NAME=github_user_info
     volumes:
       - .:/app
     depends_on:
@@ -12,13 +22,15 @@ services:
 
   db:
     image: mysql
+    networks:
+      backend_network:
     restart: always
     environment:
-      MYSQL_DATABASE: admin
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: root
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: github_user_info
+      MYSQL_USER: rob
+      MYSQL_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: admin
     volumes:
       - .dbdata:/var/lib/mysql
     ports:
-      - 33066:3306
+      - "3306:3306"

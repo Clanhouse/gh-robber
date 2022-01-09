@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 basedir = Path(__file__).resolve().parent
-env_file = basedir / "env.txt"
+env_file = basedir / ".env"
 load_dotenv(env_file)
 
 
@@ -25,26 +25,21 @@ class TestingConfig(Config):
 
 
 class DevelopmentConfig(Config):
-    SQLALCHEMY_DATABASE_URI=f'mysql+pymysql://root:plyta123@localhost/github_user_info?charset=utf8mb4'
-    # SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
-    # DB_USERNAME = os.environ.get('root')
-    # DB_PASSWORD = os.environ.get('plyta123')
-    # DB_HOST = os.environ.get('localhost')
-    # DB_NAME = os.environ.get('github_user_info')
-    # SQLALCHEMY_DATABASE_URI = f'mysql+pymysql://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}?charset=utf8mb4'
+    SQLALCHEMY_DATABASE_URI=f'mysql+pymysql://root:admin@dupa/github_user_info?charset=utf8mb4'
 
 
 class ProductionConfig(Config):
     DB_HOST = os.environ.get('DB_HOST')
+    DB_PORT = os.environ.get('DB_PORT')
     DB_USERNAME = os.environ.get('DB_USERNAME')
     DB_PASSWORD = os.environ.get('DB_PASSWORD')
     DB_NAME = os.environ.get('DB_NAME')
-    SQLALCHEMY_DATABASE_URI = f'mysql+pymysql://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}?charset=utf8mb4'
+    SQLALCHEMY_DATABASE_URI = f'mysql+pymysql://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}?charset=utf8mb4'
 
 
 config = {
-    "development": DevelopmentConfig,
+    "development": ProductionConfig,
     "testing": TestingConfig,
     "production": ProductionConfig,
-    "default": DevelopmentConfig,
+    "default": ProductionConfig,
 }

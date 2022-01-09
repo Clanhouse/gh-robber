@@ -1,16 +1,15 @@
 #!/bin/sh
 
-if [ "$DATABASE" = "mysql" ]
-then
-    echo "Waiting for mysql..."
+echo "Waiting for mysql..."
 
-    while ! nc -z "$SQL_HOST" "$SQL_PORT"; do
-      sleep 0.1
-    done
+while ! nc -z "$DB_HOST" "$DB_PORT"; do
+  sleep 0.1
+done
 
-    echo "MySQL started"
-fi
+echo "MySQL started"
 
+flask db upgrade
+echo "db upgraded"
 python gh_robber.py make_shell_context
 
 exec "$@"

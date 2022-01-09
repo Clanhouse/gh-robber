@@ -16,5 +16,6 @@ ADD ./app /app
 COPY gh_robber.py /app
 COPY config.py /app
 COPY .flaskenv /app
+COPY entrypoint.sh /app
 
-CMD python gh_robber.py
+ENTRYPOINT ["/app/entrypoint.sh"]

@@ -5,6 +5,7 @@ from sqlalchemy.sql.operators import isnot
 from . import db
 from app.models import GithubUserInfo, GithubRepositories
 from datetime import datetime
+from os.path import exists
 import logging
 
 
@@ -14,9 +15,9 @@ import logging
         token must be without '' and ""
 """
 
-LOG_FORMAT = "%(Levelname)s %(asctime)s - %(message)s"
+LOG_FORMAT = "%(levelname)s %(asctime)s - %(message)s"
 logging.basicConfig(
-    filename="*\\GH_API_handling_logs.log", level=logging.INFO, format=LOG_FORMAT
+    filename="GH_API_handling_logs.log", level=logging.INFO, format=LOG_FORMAT
 )
 logger = logging.getLogger()
 
@@ -125,9 +126,9 @@ def add_repo_to_database(repo_name=None, return_added_repo=False):
 
     if repo_name != None:
         if repo_is_in_db(repo_name) and return_added_repo == False:
-            return f"Repo {repo_name} is already in database"
+            return logger.info(f"Repo {repo_name} is already in database")
         if repo_is_in_db(repo_name) and return_added_repo == True:
-            print(f"Repo {repo_name} is already in database")
+            logger.info(f"Repo {repo_name} is already in database")
             return GithubRepositories.query.filter_by(reponame=repo_name).first()
         else:
             g = Github(str(GH_access_token))
@@ -171,9 +172,9 @@ def add_user_to_database(username=None, return_added_user=False):
     if username != None:
         g = Github(str(GH_access_token))
         if user_is_in_db(username) and return_added_user == False:
-            return f"User {username} is already in database"
+            return logger.info(f"User {username} is already in database")
         elif user_is_in_db(username) and return_added_user == True:
-            print(f"User {username} is already in database")
+            logger.info(f"User {username} is already in database")
             return GithubUserInfo.query.filter_by(username=username).first()
         else:
             user = g.get_user(username)
@@ -260,3 +261,38 @@ def update_all_repos(older_than=None):
     for repo in repos_to_update:
         update_repo(repo.reponame)
     logger.debug("Func update_all_repos ended.")
+
+
+def auto_scraping_GH():
+    """
+    Function adds repos from GH_seed_repos.txt and users from GH_seed_users.txt to database.
+    Then it starts infinite loop to continiously scrape GH for repos and users
+    """
+
+    GH_repos_seed_file_exists = exists("GH_seed_repos.txt")
+    GH_users_seed_file_exists = exists("GH_seed_users.txt")
+
+    if GH_repos_seed_file_exists:
+        logger.debug("File GH_seed_repos.txt has been found.")
+        GH_seed_repos_list = []
+        with open("GH_seed_repos.txt") as repos_file:
+            for repo in repos_file:
+                GH_seed_repos_list.append(repo.rstrip())
+                logger.info(f"Repo {repo} is loaded from seed file.")
+
+    if GH_users_seed_file_exists:
+        logger.debug(f"File GH_seed_users.txt has been found.")
+        GH_seed_users_list = []
+        with open("GH_seed_users.txt") as users_file:
+            for user in users_file:
+                GH_seed_users_list.append(user.rstrip())
+                logger.info(f"User {user} is loaded from seed file.")
+
+    for repo in GH_seed_repos_list:
+        add_repo_to_database(repo)
+    for user in GH_seed_users_list:
+        add_user_to_database(user)
+
+    logger.info("Infinite loop in auto_scraping_script initiated.")
+    while True:
+        fill_repos_with_users()

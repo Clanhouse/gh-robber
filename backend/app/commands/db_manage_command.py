@@ -111,10 +111,9 @@ def fill_repos_with_users():
         print(f"Unexpected error: {exc}")
 
 
-# test to delete
 @db_manage.command()
-def query_test():
+def auto_scraping():
     try:
-        GH_API_handling.query_test()
+        GH_API_handling.auto_scraping_GH()
     except Exception as exc:
         print(f"Unexpected error: {exc}")

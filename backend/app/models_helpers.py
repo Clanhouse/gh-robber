@@ -33,7 +33,7 @@ def create_fake_info(count=10):
             reponame=forgery_py.internet.user_name(True),
             languages=[choice(LANGUAGE_LIST)],
             topics=[1, 2, 3],
-            date=forgery_py.date.date(),
+            last_update=forgery_py.date.date(),
             stars=randint(1, 100),
         )
         db.session.add(fake_repo)

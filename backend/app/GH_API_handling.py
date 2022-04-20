@@ -5,8 +5,9 @@ from sqlalchemy.sql.operators import isnot
 from . import db
 from app.models import GithubUserInfo, GithubRepositories
 from datetime import datetime
-from os.path import exists
+from os import path
 import logging
+import sys
 
 
 """
@@ -269,29 +270,41 @@ def auto_scraping_GH():
     Then it starts infinite loop to continiously scrape GH for repos and users
     """
 
-    GH_repos_seed_file_exists = exists("GH_seed_repos.txt")
-    GH_users_seed_file_exists = exists("GH_seed_users.txt")
+    GH_repos_seed_file_exists = path.exists("app/GH_seed_repos.txt")
+    GH_users_seed_file_exists = path.exists("app/GH_seed_users.txt")
 
     if GH_repos_seed_file_exists:
         logger.debug("File GH_seed_repos.txt has been found.")
         GH_seed_repos_list = []
-        with open("GH_seed_repos.txt") as repos_file:
+        with open("app/GH_seed_repos.txt") as repos_file:
             for repo in repos_file:
-                GH_seed_repos_list.append(repo.rstrip())
-                logger.info(f"Repo {repo} is loaded from seed file.")
+                line = repo.rstrip()
+                if not line.startswith("#"):
+                    if line != "":
+                        GH_seed_repos_list.append(line)
+                        logger.info(f"Repo {line} is loaded from seed file.")
 
     if GH_users_seed_file_exists:
         logger.debug(f"File GH_seed_users.txt has been found.")
         GH_seed_users_list = []
-        with open("GH_seed_users.txt") as users_file:
+        with open("app/GH_seed_users.txt") as users_file:
             for user in users_file:
-                GH_seed_users_list.append(user.rstrip())
-                logger.info(f"User {user} is loaded from seed file.")
+                line = user.rstrip()
+                if not line.startswith("#"):
+                    if line != "":
+                        GH_seed_users_list.append(line)
+                        logger.info(f"User {line} is loaded from seed file.")
 
     for repo in GH_seed_repos_list:
-        add_repo_to_database(repo)
+        try:
+            add_repo_to_database(repo)
+        except:
+            logger.exception(f"Exception while getting repo from seed file: {repo}")
     for user in GH_seed_users_list:
-        add_user_to_database(user)
+        try:
+            add_user_to_database(user)
+        except:
+            logger.exception(f"Exception while getting user from seed file: {user}")
 
     logger.info("Infinite loop in auto_scraping_script initiated.")
     while True:

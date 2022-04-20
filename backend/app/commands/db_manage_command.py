@@ -5,6 +5,7 @@ from app.commands import db_manage_bp
 from ..models import GithubUserInfo
 import json
 import sys
+import os
 from datetime import datetime, timedelta
 
 
@@ -26,10 +27,10 @@ def add_data():
 
 
 @db_manage.command()
-def add_user_from_GH_API():
+def add_user_from_GH_API(username=None):
     """Add sample user to database"""
     try:
-        GH_API_handling.add_user_to_database("orzeech")
+        GH_API_handling.add_user_to_database(username=username)
         db.session.commit()
         print("Data has been successfully added to database")
     except Exception as exc:

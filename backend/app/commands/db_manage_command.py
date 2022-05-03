@@ -115,6 +115,7 @@ def fill_repos_with_users():
 @db_manage.command()
 def auto_scraping():
     try:
+        os.environ["AUTO_SCRAPING_RUNNING"] = True
         GH_API_handling.auto_scraping_GH()
     except Exception as exc:
         print(f"Unexpected error: {exc}")

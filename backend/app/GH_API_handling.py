@@ -5,7 +5,10 @@ from sqlalchemy.sql.operators import isnot
 from . import db
 from app.models import GithubUserInfo, GithubRepositories
 from datetime import datetime
+from os import path
 import logging
+import os
+import time
 
 
 """
@@ -14,14 +17,27 @@ import logging
         token must be without '' and ""
 """
 
-LOG_FORMAT = "%(Levelname)s %(asctime)s - %(message)s"
+LOG_FORMAT = "%(levelname)s %(asctime)s - %(message)s"
 logging.basicConfig(
-    filename="*\\GH_API_handling_logs.log", level=logging.INFO, format=LOG_FORMAT
+    filename="GH_API_handling_logs.log", level=logging.INFO, format=LOG_FORMAT
 )
 logger = logging.getLogger()
 
 with open("./app/GH_access_token.txt") as f:
     GH_access_token = f.read().strip()
+
+
+global gh_scraping_running
+gh_scraping_running = True
+
+
+def is_scraping_running():
+    return gh_scraping_running
+
+
+def set_scraping_running_true():
+    global gh_scraping_running
+    gh_scraping_running = True
 
 
 def user_is_in_db(usrname=None):
@@ -59,6 +75,8 @@ def update_repo(repo_name=None):
             contributors_objs_list = []
 
             for contributor in repo.get_contributors():
+                while gh_scraping_running == False:
+                    time.sleep(10)
                 if (
                     contributor.login != "None"
                     and user_is_in_db(contributor.login) == False
@@ -99,6 +117,8 @@ def update_user_info(usrname=None):
             user = g.get_user(usrname)
             sourced_repos = []
             for repo in user.get_repos():
+                while gh_scraping_running == False:
+                    time.sleep(10)
                 added_repo = add_repo_to_database(
                     repo.full_name, return_added_repo=True
                 )
@@ -125,11 +145,13 @@ def add_repo_to_database(repo_name=None, return_added_repo=False):
 
     if repo_name != None:
         if repo_is_in_db(repo_name) and return_added_repo == False:
-            return f"Repo {repo_name} is already in database"
+            return logger.info(f"Repo {repo_name} is already in database")
         if repo_is_in_db(repo_name) and return_added_repo == True:
-            print(f"Repo {repo_name} is already in database")
+            logger.info(f"Repo {repo_name} is already in database")
             return GithubRepositories.query.filter_by(reponame=repo_name).first()
         else:
+            while gh_scraping_running == False:
+                time.sleep(10)
             g = Github(str(GH_access_token))
             repo = g.get_repo(repo_name)
 
@@ -171,15 +193,17 @@ def add_user_to_database(username=None, return_added_user=False):
     if username != None:
         g = Github(str(GH_access_token))
         if user_is_in_db(username) and return_added_user == False:
-            return f"User {username} is already in database"
+            return logger.info(f"User {username} is already in database")
         elif user_is_in_db(username) and return_added_user == True:
-            print(f"User {username} is already in database")
+            logger.info(f"User {username} is already in database")
             return GithubUserInfo.query.filter_by(username=username).first()
         else:
             user = g.get_user(username)
             sourced_repos = []
 
             for repo in user.get_repos():
+                while gh_scraping_running == False:
+                    time.sleep(10)
                 if repo_is_in_db(repo.full_name):
                     added_repo = GithubRepositories.query.filter_by(
                         reponame=repo.full_name
@@ -226,6 +250,8 @@ def fill_repos_with_users():
         GithubRepositories.has_sourced_users == False
     )
     for repo in repos_to_update:
+        while gh_scraping_running == False:
+            time.sleep(10)
         update_repo(repo.reponame)
     logger.debug("Func fill_repos_with_users ended.")
 
@@ -242,6 +268,8 @@ def update_all_users(older_than=None):
             GithubUserInfo.last_update < older_than
         )
     for user in users_to_update:
+        while gh_scraping_running == False:
+            time.sleep(10)
         update_user_info(user.username)
     logger.debug("Func update_all_users ended.")
 
@@ -258,5 +286,70 @@ def update_all_repos(older_than=None):
             GithubRepositories.last_update < older_than
         )
     for repo in repos_to_update:
+        while gh_scraping_running == False:
+            time.sleep(10)
         update_repo(repo.reponame)
     logger.debug("Func update_all_repos ended.")
+
+
+def auto_scraping_GH():
+    """
+    Function adds repos from GH_seed_repos.txt and users from GH_seed_users.txt to database.
+    Then it starts infinite loop to continiously scrape GH for repos and users
+    """
+
+    GH_repos_seed_path = os.environ.get("GH_REPOS_SEED_PATH")
+    GH_users_seed_path = os.environ.get("GH_USERS_SEED_PATH")
+
+    if GH_repos_seed_path != None:
+        GH_repos_seed_file_exists = path.exists(GH_repos_seed_path)
+    else:
+        GH_repos_seed_file_exists = False
+
+    if GH_users_seed_path != None:
+        GH_users_seed_file_exists = path.exists(GH_users_seed_path)
+    else:
+        GH_users_seed_file_exists = False
+
+    GH_seed_repos_list = []
+    GH_seed_users_list = []
+
+    if GH_repos_seed_file_exists:
+        logger.debug("File GH_seed_repos.txt has been found.")
+
+        with open(GH_repos_seed_path) as repos_file:
+            for repo in repos_file:
+                line = repo.rstrip()
+                if not line.startswith("#"):
+                    if line != "":
+                        GH_seed_repos_list.append(line)
+                        logger.info(f"Repo {line} is loaded from seed file.")
+
+    if GH_users_seed_file_exists:
+        logger.debug(f"File GH_seed_users.txt has been found.")
+
+        with open(GH_users_seed_path) as users_file:
+            for user in users_file:
+                line = user.rstrip()
+                if not line.startswith("#"):
+                    if line != "":
+                        GH_seed_users_list.append(line)
+                        logger.info(f"User {line} is loaded from seed file.")
+
+    for repo in GH_seed_repos_list:
+        try:
+            add_repo_to_database(repo)
+        except:
+            logger.exception(f"Exception while getting repo from seed file: {repo}")
+    for user in GH_seed_users_list:
+        try:
+            add_user_to_database(user)
+        except:
+            logger.exception(f"Exception while getting user from seed file: {user}")
+
+    logger.info("Infinite loop in auto_scraping_script initiated.")
+    while True:
+        if gh_scraping_running == True:
+            fill_repos_with_users()
+        elif gh_scraping_running == False:
+            time.sleep(10)

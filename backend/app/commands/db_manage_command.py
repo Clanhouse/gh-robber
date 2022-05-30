@@ -5,6 +5,7 @@ from app.commands import db_manage_bp
 from ..models import GithubUserInfo
 import json
 import sys
+import os
 from datetime import datetime, timedelta
 
 
@@ -26,10 +27,10 @@ def add_data():
 
 
 @db_manage.command()
-def add_user_from_GH_API():
+def add_user_from_GH_API(username=None):
     """Add sample user to database"""
     try:
-        GH_API_handling.add_user_to_database("orzeech")
+        GH_API_handling.add_user_to_database(username=username)
         db.session.commit()
         print("Data has been successfully added to database")
     except Exception as exc:
@@ -111,10 +112,10 @@ def fill_repos_with_users():
         print(f"Unexpected error: {exc}")
 
 
-# test to delete
 @db_manage.command()
-def query_test():
+def auto_scraping():
     try:
-        GH_API_handling.query_test()
+        os.environ["AUTO_SCRAPING_RUNNING"] = "True"
+        GH_API_handling.auto_scraping_GH()
     except Exception as exc:
         print(f"Unexpected error: {exc}")

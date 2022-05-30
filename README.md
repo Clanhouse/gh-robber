@@ -32,6 +32,16 @@ and makes them available to recruiters in the form of subscription.
 1. Navigate to backend/app folder
 1. `flask db-manage remove-data`
 
+### How to run automatic data scraping from gh
+
+1. Update file named `GH_seed_repos.txt` - list of repos to scrape (optional) and update a
+   path variable - path to this file is stored in the environmetal variable: "GH_REPOS_SEED_PATH"
+2. Update file named `GH_seed_users.txt` - list of users to scrape (optional) and update a
+   path variable - path to this file is stored in the environmetal variable: "GH_USERS_SEED_PATH"
+3. Navigate to `backend` folder
+4. Type in the terminal `flask db-manage auto-scraping`
+5. To pause this process switch the environmental variable "AUTO_SCRAPING_RUNNING" to "False"
+
 ### How to run tests
 
 To execute the tests located in the tests/ folder, navigate to the backend folder and run the command:

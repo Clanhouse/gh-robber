@@ -27,6 +27,19 @@ with open("./app/GH_access_token.txt") as f:
     GH_access_token = f.read().strip()
 
 
+global gh_scraping_running
+gh_scraping_running = True
+
+
+def is_scraping_running():
+    return gh_scraping_running
+
+
+def set_scraping_running_true():
+    global gh_scraping_running
+    gh_scraping_running = True
+
+
 def user_is_in_db(usrname=None):
     """Check if the user with usrname is in database"""
     found_user = GithubUserInfo.query.filter_by(username=usrname).first()
@@ -62,7 +75,7 @@ def update_repo(repo_name=None):
             contributors_objs_list = []
 
             for contributor in repo.get_contributors():
-                while os.environ.get("AUTO_SCRAPING_RUNNING") == "False":
+                while gh_scraping_running == False:
                     time.sleep(10)
                 if (
                     contributor.login != "None"
@@ -104,7 +117,7 @@ def update_user_info(usrname=None):
             user = g.get_user(usrname)
             sourced_repos = []
             for repo in user.get_repos():
-                while os.environ.get("AUTO_SCRAPING_RUNNING") == "False":
+                while gh_scraping_running == False:
                     time.sleep(10)
                 added_repo = add_repo_to_database(
                     repo.full_name, return_added_repo=True
@@ -137,7 +150,7 @@ def add_repo_to_database(repo_name=None, return_added_repo=False):
             logger.info(f"Repo {repo_name} is already in database")
             return GithubRepositories.query.filter_by(reponame=repo_name).first()
         else:
-            while os.environ.get("AUTO_SCRAPING_RUNNING") == "False":
+            while gh_scraping_running == False:
                 time.sleep(10)
             g = Github(str(GH_access_token))
             repo = g.get_repo(repo_name)
@@ -189,7 +202,7 @@ def add_user_to_database(username=None, return_added_user=False):
             sourced_repos = []
 
             for repo in user.get_repos():
-                while os.environ.get("AUTO_SCRAPING_RUNNING") == "False":
+                while gh_scraping_running == False:
                     time.sleep(10)
                 if repo_is_in_db(repo.full_name):
                     added_repo = GithubRepositories.query.filter_by(
@@ -237,7 +250,7 @@ def fill_repos_with_users():
         GithubRepositories.has_sourced_users == False
     )
     for repo in repos_to_update:
-        while os.environ.get("AUTO_SCRAPING_RUNNING") == "False":
+        while gh_scraping_running == False:
             time.sleep(10)
         update_repo(repo.reponame)
     logger.debug("Func fill_repos_with_users ended.")
@@ -255,7 +268,7 @@ def update_all_users(older_than=None):
             GithubUserInfo.last_update < older_than
         )
     for user in users_to_update:
-        while os.environ.get("AUTO_SCRAPING_RUNNING") == "False":
+        while gh_scraping_running == False:
             time.sleep(10)
         update_user_info(user.username)
     logger.debug("Func update_all_users ended.")
@@ -273,7 +286,7 @@ def update_all_repos(older_than=None):
             GithubRepositories.last_update < older_than
         )
     for repo in repos_to_update:
-        while os.environ.get("AUTO_SCRAPING_RUNNING") == "False":
+        while gh_scraping_running == False:
             time.sleep(10)
         update_repo(repo.reponame)
     logger.debug("Func update_all_repos ended.")
@@ -304,7 +317,7 @@ def auto_scraping_GH():
     if GH_repos_seed_file_exists:
         logger.debug("File GH_seed_repos.txt has been found.")
 
-        with open("app/GH_seed_repos.txt") as repos_file:
+        with open(GH_repos_seed_path) as repos_file:
             for repo in repos_file:
                 line = repo.rstrip()
                 if not line.startswith("#"):
@@ -315,7 +328,7 @@ def auto_scraping_GH():
     if GH_users_seed_file_exists:
         logger.debug(f"File GH_seed_users.txt has been found.")
 
-        with open("app/GH_seed_users.txt") as users_file:
+        with open(GH_users_seed_path) as users_file:
             for user in users_file:
                 line = user.rstrip()
                 if not line.startswith("#"):
@@ -336,7 +349,7 @@ def auto_scraping_GH():
 
     logger.info("Infinite loop in auto_scraping_script initiated.")
     while True:
-        if os.environ.get("AUTO_SCRAPING_RUNNING") == "True":
+        if gh_scraping_running == True:
             fill_repos_with_users()
-        elif os.environ.get("AUTO_SCRAPING_RUNNING") == "False":
+        elif gh_scraping_running == False:
             time.sleep(10)

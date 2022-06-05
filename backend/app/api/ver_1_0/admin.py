@@ -1,3 +1,4 @@
+from email import message
 from flask import jsonify
 import app.GH_API_handling as GH_API_handling
 from app.api.ver_1_0 import admin_api
@@ -12,29 +13,43 @@ def init_fake_data():
 
 @admin_api.route("/scraping/GH-scrape-user/<user>", methods=["GET", "POST"])
 def scrape_user_from_GH(user):
-    # stop scraping
-    GH_API_handling.add_user_to_database(user)
-    # start scraping
-    return jsonify(status="Request to scrape user " + user + " sent")
+    scraping = GH_API_handling.Scraping()
+    scraping.add_user_to_database(user)
+    return jsonify(message="Request to scrape user " + user + " sent")
 
 
 @admin_api.route("/scraping/GH-scrape-repo/<repo>", methods=["GET", "POST"])
 def scrape_repo_from_GH(repo):
-    # stop scraping
-    GH_API_handling.add_user_to_database(repo)
-    # start scraping
-    return jsonify(status="Request to scrape repo " + repo + " sent")
+    scraping = GH_API_handling.Scraping()
+    scraping.add_repo_to_database(repo)
+    return jsonify(message="Request to scrape repo " + repo + " sent")
 
 
-@admin_api.route("/scraping/GHstatus/")
+@admin_api.route("/scraping/GH-status/")
 def GH_scraping_status():
-    # add function to show scraping flag
-    return jsonify(status=GH_API_handling.is_scraping_running())
+    return jsonify(
+        running=GH_API_handling.Scraping.gh_scraping_running,
+        last_scraped_repo=GH_API_handling.Scraping.last_scraped_repo_name,
+        last_scraped_repo_timestamp=GH_API_handling.Scraping.last_scraped_repo_timestamp,
+        last_scraped_user=GH_API_handling.Scraping.last_scraped_user_name,
+        last_scraped_user_timestamp=GH_API_handling.Scraping.last_scraped_user_timestamp,
+    )
 
 
-@admin_api.route("/scraping/GHstartscraping/", methods=["GET", "POST"])
-def start_scraping_GH():
-    # set scraping flag True
-    GH_API_handling.set_scraping_running_true()
-    GH_API_handling.auto_scraping_GH()
+@admin_api.route("/scraping/GH-init-scraping/", methods=["GET", "POST"])
+def init_scraping_GH():
+    scraping = GH_API_handling.Scraping()
+    scraping.auto_scraping_GH()
     # return {"status": "Scraping started"}  # why is it unreachable
+
+
+@admin_api.route("/scraping/GH-spause-scraping/", methods=["GET", "POST"])
+def pause_scraping_GH():
+    GH_API_handling.Scraping.gh_scraping_running = False
+    return jsonify(message="Scraping is paused")
+
+
+@admin_api.route("/scraping/GH-resume-scraping/", methods=["GET", "POST"])
+def resume_scraping_GH():
+    GH_API_handling.Scraping.gh_scraping_running = True
+    return jsonify(message="Scraping is resumed")

@@ -25,6 +25,20 @@ def scrape_repo_from_GH(repo):
     return jsonify(message="Request to scrape repo " + repo + " sent")
 
 
+@admin_api.route("/scraping/GH-update-user/<user>", methods=["GET", "POST"])
+def update_GH_user(user):
+    scraping = GH_API_handling.Scraping()
+    scraping.update_user_info(user)
+    return jsonify(message="Request to update user " + user + " sent")
+
+
+@admin_api.route("/scraping/GH-update-repo/<repo>", methods=["GET", "POST"])
+def update_GH_repo(repo):
+    scraping = GH_API_handling.Scraping()
+    scraping.update_repo(repo)
+    return jsonify(message="Request to update repo " + repo + " sent")
+
+
 @admin_api.route("/scraping/GH-status/")
 def GH_scraping_status():
     return jsonify(
